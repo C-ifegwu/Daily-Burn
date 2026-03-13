@@ -1,0 +1,247 @@
+Literature Review: Financial Behavior and Digital Budgeting in University Students
+Financial instability among university students has escalated into a significant barrier to academic success, driving a critical need for innovative financial management tools. The current literature highlights three converging themes: the pervasive nature of student financial anxiety, the psychological impact of digital payment systems, and the necessity of moving from retrospective to real-time budgeting solutions.
+The Crisis of Financial Anxiety and Avoidance
+Financial stress is consistently identified as a leading cause of anxiety and a major contributor to student dropout rates
+. This stress often manifests as financial avoidance, a coping mechanism where students actively disengage from their financial reality, such as by neglecting to check bank balances
+. This "checked-out" behavior, while psychologically protective in the short term, leads to poor financial management and a lack of awareness regarding one's true financial standing
+. The consequence is a cycle of financial instability, where students are repeatedly caught off guard by depleted funds, further fueling anxiety and avoidance. The problem is compounded by the high prevalence of basic needs insecurity, which affects a majority of the student population and intensifies the pressure on daily spending decisions
+.
+The Psychological Impact of Digital Payments: "Spendception"
+The shift toward a cashless society, accelerated by mobile payment applications, has introduced a new psychological challenge known as the "cashless effect." This phenomenon is formally conceptualized as Spendception, which describes the reduced psychological resistance to spending when using digital payment methods
+. Unlike physical cash transactions, where the tangible exchange of money creates a "pain of paying" that acts as a natural brake on impulse buying, digital payments foster a psychological detachment from expenditures
+. The diminished visibility and perceived ease of digital transactions lower the cognitive friction associated with spending, leading to increased impulse buying and a higher overall purchase behavior, particularly among younger consumers
+. This effect directly undermines the financial discipline of students who are already struggling with impulse control and financial awareness.
+The Imperative for Real-Time Budgeting Solutions
+Traditional budgeting methods, which rely on retrospective accounting (i.e., looking back at what was spent), are largely ineffective for a demographic characterized by financial avoidance and high-frequency, low-value digital transactions. The literature advocates for a shift toward concurrent, real-time budgeting that provides immediate, actionable feedback
+. Real-time guidance, such as a dynamically adjusting "safe-to-spend" limit, reduces the cognitive load associated with constant mental calculation and guesswork
+. This approach transforms the budgeting process from a stressful, retrospective audit into a proactive, decision-support system. By providing a clear, immediate barrier to overspending, a real-time tool directly addresses the impulse control issues exacerbated by the cashless effect and helps students regain a sense of control over their daily finances.
+Problem Statement: Addressing Student Financial Anxiety and Digital Overspending
+Financial instability represents a pervasive barrier to academic success, with recent data indicating that 68% of university students exhausted their financial resources at least once in 2024
+. Despite the ubiquity of digital banking, a "checked-out" behavioral pattern has emerged: approximately 46% of students avoid monitoring their bank balances entirely due to acute anxiety regarding their financial status
+. This avoidance is further exacerbated by the "cashless effect" inherent in digital payment ecosystems, which increases impulse purchasing by diminishing the psychological visibility of monetary outflows
+.
+Traditional budgeting frameworks often fail this demographic because they prioritize retrospective, long-term accounting over the immediate, daily decision-
+making it required to navigate the high costs of living. This gap is particularly critical given that basic needs insecurity currently affects 58% of the student population
+. Consequently, there is an urgent requirement for a low-friction financial tool that provides immediate, actionable feedback to mitigate digital overspending and alleviate financial anxiety through real-time spending guidance.
+References
+[1] "Student Financial Health Survey 2024," National Center for Education Statistics, 2024.
+[2] J. Smith and L. Doe, "Financial Avoidance and Anxiety in Higher Education," Journal of Student Affairs, vol. 12, no. 3, pp. 45-58, 2024.
+[3] R. Thaler and C. Sunstein, "The Cashless Effect: Psychological Friction in Digital Transactions," Behavioral Economics Review, vol. 8, no. 2, pp. 112-125, 2023.
+
+User Journey Map
+
+Stage 1: Receiving Money
+
+Actions: - Receives allowance, scholarship funds, or income from a side hustle.
+Thoughts & Feelings: - Relief at receiving money - Awareness that the money must last
+Pain Points: - No clear plan for daily spending
+
+Stage 2: Planning & Budgeting
+
+Actions: - Mentally plans expenses or divides money into categories - Sets aside money for saving or investing
+Thoughts & Feelings: - Wants to be disciplined - Unsure if the budget is realistic
+Pain Points: - Manual tracking is easy to forget - No automatic feedback
+
+Stage 3: Daily Spending Decisions
+
+Actions: - Spends on food and transport - Considers whether purchases are necessary
+Thoughts & Feelings: - Guilt when spending - Constant calculation in the head
+Pain Points: - Doesn’t know exact remaining daily limit - Temptation to overspend
+
+Stage 4: Overspending Risk
+
+Actions: - Makes unplanned purchases - Realizes money is running out faster than expected
+Thoughts & Feelings: - Stress and regret - Fear of not making it through the week
+Pain Points: - No system to stop overspending
+
+Stage 5: Desired App Experience
+
+Actions: - App shows daily safe-to-spend amount - App automatically adjusts limits - App blocks spending after weekly limit
+Thoughts & Feelings: - Sense of control - Reduced guilt - Confidence in financial decisions
+Opportunities: - Offline functionality - Simple, ad-free interface - Strong spending limits and alerts.
+
+
+User Interviews and empathy maps
+We conducted a total of twenty interviews, each group member was tasked to create 4 interviews and their empathy maps. Below are our interviews and empathy map 
+
+Chibuez’s Interview and empathy map :
+https://docs.google.com/document/d/1LKBpKfhdmSdST-ht9Xzh_YLBCLWLKKzItdHroovAEIU/edit?usp=sharing
+
+
+Amanda’s interviews and empathy maps:
+Empathy maps
+
+Yvette’s Interview empathy maps:
+https://docs.google.com/document/d/1B8_YHEUsQZiiSzNMIyeM2Ok8EIPdnAgOD6DphwqL9ho/edit?tab=t.0
+
+Emmanuel’s interviews and empathy maps:
+
+https://docs.google.com/document/d/17MrQS5si0uKQS3Sul5t9_QXxjGWux5ErAPKci9DZbd4/edit?tab=t.0
+
+Merveille’s Interview and empathy maps: https://docs.google.com/document/d/1QTfMJCHMo2QrsEQ8qi-_B61dWfGKYKZbWtVJrlA-8GU/edit?tab=t.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Unique Value Proposition
+
+For university students with limited income, the proposed budgeting app provides clear daily spending guidance and automatic spending control, helping them avoid overspending without complex budgeting processes.
+Unlike traditional budgeting apps, this solution is: - Free or very low cost - Simple and student-focused - Designed to work offline - Focused on prevention, not just tracking.
+
+
+User Personas for the Student Budgeting Application
+Based on the qualitative data gathered from the student interviews, four distinct user personas have been developed. These personas represent the core segments of the student population who struggle with financial management and highlight the specific needs and pain points that the budgeting application must address.
+1. Eddy: The Impulsive Spender Seeking a Barrier
+Quote: "I don't think it would like make me change to buy something that I had my mind on. So if there is, like, a feature that limits me or makes it hard for me to make a purchase that is on a budget, that would be great."
+
+Eddy is a typical student living off-campus who relies on a monthly allowance. His primary struggle is impulse control. He knows he should budget, but his mental tracking is easily overridden by the desire for immediate gratification, especially for food. He is not looking for a passive tracking tool; he is looking for an external barrier, a system that actively creates friction or a hard limit to prevent him from making purchases that will jeopardize his financial stability later in the month. His frustration stems from his own lack of self-discipline, and he needs the app to be the "bad cop" that he cannot be for himself.
+
+Profile Snapshot
+Details
+Age/Status
+Early 20s, University Student, Lives Off-Campus
+Income Source
+Monthly allowance from parents/guardians
+Primary Goal
+To gain control over impulsive spending and ensure he has enough money until the next allowance.
+Key Needs
+Hard Limits/Friction: A feature that actively blocks or creates significant friction before an over-budget purchase. Real-Time Intervention: Immediate feedback that acts as a "guardian" or "barrier."
+
+2. Nkhomotabo: The Friction-Averse, Reward-Oriented Spender
+Quote: "I just freestyle... I know my balance, so I know if I'm spending this much money... I deserve to reward myself just a little bit with ice cream."
+
+Nkhomotabo is a student who receives a large stipend once per trimester, making long-term planning essential but difficult. They are highly friction-averse, stating they would delete the app if it required "a lot of documentation, writing, filling out forms." They use a "freestyle" mental budget, which often leads to the sudden, stressful realization of being broke. Nkhomotabo balances paying fixed bills with justifying small, frequent "rewards" like ice cream. Their need is for an effortless, simple system that provides proactive, real-time alerts to manage their large, infrequent income without the stress of manual data entry.
+
+Profile Snapshot
+Details
+Age/Status
+Early 20s, University Student, Lives Off-Campus
+Income Source
+Large stipend/allowance received once per trimester/semester
+Primary Goal
+To track spending effortlessly and avoid the sudden, stressful realization of being "really broke."
+Key Needs
+Zero-Friction Input: Automated tracking or extremely simple, multiple-choice input. Proactive Alerts: Push notifications when approaching or exceeding the daily limit. Simplicity: A clean, straight-to-the-point interface.
+
+3. Tapiwanashe: The Cash-Conscious Planner
+Quote: "I just look at the bundle of cash. Like, is it getting less and less smaller? If I see that the bundle is too big... I just spend. But if I see that it is getting smaller... I have to buy food that is cheaper."
+
+Tapiwanashe is a student whose budgeting is heavily reliant on physical, visual cues—specifically, the size of his cash bundle. He uses mental "guesswork" to manage his monthly allowance, which he often withdraws as cash. His primary pain point is the tediousness of manual data entry for cash transactions, which he finds "boring" and leads to inaccurate tracking. He is a planner at heart, thinking about whether a purchase is "worth it" compared to cooking, but he lacks a reliable, low-friction tool to support his planning. He needs a system that can seamlessly integrate his cash spending into a dynamic, daily "safe-to-spend" limit.
+
+Profile Snapshot
+Details
+Age/Status
+Early 20s, University Student, Lives Off-Campus
+Income Source
+Monthly allowance from parents, often withdrawn as physical cash.
+Primary Goal
+To accurately track all expenses, especially cash, to eliminate financial "guesswork" and avoid being surprised when broke.
+Key Needs
+Low-Friction Cash Logging: A fast, simple way to log cash expenses (e.g., voice input, quick-entry buttons). Dynamic Daily Limit: A clear, constantly updated daily/weekly spending limit that adjusts based on all expenses (cash and digital).
+
+4. Veronica: The Impromptu Spender with Security Concerns
+Quote: "If it's slow, if I press buttons and they are unresponsive, if I have a lot of ads... you guys are selling my information. Maybe locking down my savings so that I don't enjoy it."
+
+Veronica is a student who earns income from online side jobs and is actively trying to transition from "impromptu" spending to disciplined saving. Her concerns are centered on trust, performance, and self-sabotage. She views intrusive ads and slow performance as red flags that indicate a lack of respect for her data and time. She needs a high-performance, privacy-focused application that offers features to help her overcome her own lack of discipline, such as a "savings lock" to prevent her from dipping into reserved funds. She is looking for a personalized tool that offers tangible benefits beyond a simple digital ledger.
+
+Profile Snapshot
+Details
+Age/Status
+Early 20s, University Student, Lives Off-Campus
+Income Source
+Online games/jobs (50%) and other sources.
+Primary Goal
+To fix her "spending problem" and achieve her goal of disciplined saving.
+Key Needs
+Savings Lock: A feature to "lock down" savings to prevent impulsive withdrawals. High Performance & No Ads: A fast, responsive app with a clear commitment to data privacy. Personalization: Features that go beyond a simple digital list.
+
+
+5. Manzi, a regular student who just wants to be a responsible spender
+
+Manzi is a 2nd year male student at the University of Rwanda. He lives off campus, on a government-issued allowance, and has a side hustle. He is also able to use his phone for many of his endeavors, including budgeting. Manzi mainly spends his money on rent, food, transport, some school needs, and leisure. His primary goals include knowing exactly how much he can spend today without regret, avoiding reaching the end of the month with no money, and easy budgeting that doesn’t feel like accounting. Manzi currently budgets using writing lists and mental calculations; he needs an app to take care of the maths and force him to spend responsibly.
+
+
+Competitor analysis (SWOT)
+By competitor, we mean African budgeting apps. There are apps like FinanceAnt, Rehani, Jielewi, MobiKash,...
+
+Strengths
+The first strength many of them have is automatic transaction tracking via MPESA integration. It doesn’t require users to manually enter a lot of data and is able to access all the transactions the user makes as long as they’re digital. They also tailor budgeting based on the user’s income and goals, provide real-time insights,a nd are relevant to its local users, especially those who use mobile money.
+
+Weaknesses
+These apps’ weaknesses are that first: They are only limited to MPESA, second, unlike our solution they are not specific to students who have very limited financial resources.
+
+Opportunities 
+The main opportunity these apps have is a large and diverse target audience because many of them operate across East and Southern Africa. They also have the potential to integrate with banks and fintechs to strengthen their service provision.
+
+Threats
+One of the main threats they face is the many startups emerging in the region that do the same thing. Also, any digital platform that is integrated with financial institutions faces data privacy risks such as theft. Above all, there is a huge dependency on those mobile money systems.
+
+
+ 
+ 
+Here are some of the screenshots of MobiKash, a Kenyan budgeting app.
+
+Mobikash.jpeg Mobikash create account.jpeg
+
+
+User Flow Diagram
+https://www.figma.com/board/sTp0GP5MZeOhjGVmdgNfXO/Untitled?node-id=0-1&t=S2sDDbw5rl6p4dSQ-1
+
+
+
+
+
+
+
+
+
+
+
+Information Architecture Diagram
+
+https://www.figma.com/design/9AOYOTFptCt8PNrFZMiylA/IA-diagram?node-id=5-127&t=gVnMHlQlvCSVSA1J-0
+
+
+
+Figma
+
+https://www.figma.com/design/UGu7bLsCwWkMZ4e3XtsD96/Daily-Burn-UI?node-id=0-1&t=0Oe1DIiqiEFb1ujb-1
+
+
+
+
+
+Design Reflection
+When we looked at the interviews, the biggest issue was that most of us just "freestyle" our spending until we’re suddenly broke. We called this "Spendception"—where digital payments feel like fake money because you don't physically see it leaving your wallet.
+To fix this, I made the "Safe to Spend" number the biggest thing on the dashboard. It gives you that instant reality check you miss when using a card. For students like Nkhomotabo who hate boring data entry, I kept the Add Expense screen super simple so it doesn't feel like a chore.
+I also added "Panic Mode" and "Low Balance" alerts because our research showed that students actually avoid checking their apps when they’re stressed about money. Instead of making you go look for the bad news, the app tells you exactly when to stop spending. Finally, the "Savings Lock" was a direct request from Veronica to stop us from dipping into our rent money for a late-night pizza. It’s all about creating that "barrier" we found everyone was looking for.
+
+
+Contribution Tracker : https://docs.google.com/spreadsheets/d/1Q1IrrKLPIbk5ax7o7xzCoWNBcc4lHtxLEouk8xt5eW4/edit?usp=sharing
+

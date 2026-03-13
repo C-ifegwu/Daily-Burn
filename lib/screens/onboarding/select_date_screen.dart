@@ -1,0 +1,223 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import '../../theme/app_theme.dart';
+import '../../providers/budget_provider.dart';
+
+class SelectDateScreen extends StatefulWidget {
+  const SelectDateScreen({super.key});
+
+  @override
+  State<SelectDateScreen> createState() => _SelectDateScreenState();
+}
+
+class _SelectDateScreenState extends State<SelectDateScreen> {
+  DateTime _selectedDate = DateTime.now();
+  final DateTime _focusedMonth = DateTime.now();
+
+  List<DateTime> get _calendarDays {
+    final first = DateTime(_focusedMonth.year, _focusedMonth.month, 1);
+    final startWeekday = first.weekday % 7; // 0=Sun
+    final start = first.subtract(Duration(days: startWeekday));
+    return List.generate(42, (i) => start.add(Duration(days: i)));
+  }
+
+  DateTime get _endDate => DateTime(
+        _selectedDate.year,
+        _selectedDate.month + 1,
+        _selectedDate.day,
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final budget = context.watch<BudgetProvider>();
+    final dayCount = _endDate.difference(_selectedDate).inDays;
+
+    return Scaffold(
+      backgroundColor: AppTheme.surface,
+      appBar: AppBar(
+        backgroundColor: AppTheme.surface,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Column(
+          children: [
+            Text('Step 2 of 3', style: AppTheme.labelSmall),
+            const SizedBox(height: 2),
+            LinearProgressIndicator(
+              value: 0.66,
+              backgroundColor: AppTheme.border,
+              valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ],
+        ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              Text('Select Start Date', style: AppTheme.headlineMedium),
+              const SizedBox(height: 6),
+              Text(
+                'When should we start tracking your budget?',
+                style: AppTheme.bodyMedium,
+              ),
+              const SizedBox(height: 24),
+
+              // Calendar card
+              Container(
+                decoration: BoxDecoration(
+                  color: AppTheme.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppTheme.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(10),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    // Month header
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            DateFormat('MMMM yyyy').format(_focusedMonth),
+                            style: AppTheme.titleMedium,
+                          ),
+                          const Spacer(),
+                          Icon(Icons.calendar_month_rounded, color: AppTheme.primary, size: 20),
+                        ],
+                      ),
+                    ),
+                    // Day headers
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        children: ['Su','Mo','Tu','We','Th','Fr','Sa'].map((d) => Expanded(
+                          child: Center(
+                            child: Text(d, style: AppTheme.labelSmall.copyWith(fontWeight: FontWeight.w700)),
+                          ),
+                        )).toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    // Grid
+                    GridView.count(
+                      crossAxisCount: 7,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      childAspectRatio: 1,
+                      children: _calendarDays.map((day) {
+                        final isCurrentMonth = day.month == _focusedMonth.month;
+                        final isSelected = day.year == _selectedDate.year &&
+                            day.month == _selectedDate.month &&
+                            day.day == _selectedDate.day;
+                        final isToday = day.year == DateTime.now().year &&
+                            day.month == DateTime.now().month &&
+                            day.day == DateTime.now().day;
+
+                        return GestureDetector(
+                          onTap: isCurrentMonth
+                              ? () => setState(() => _selectedDate = day)
+                              : null,
+                          child: Container(
+                            margin: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppTheme.primary : Colors.transparent,
+                              shape: BoxShape.circle,
+                              border: isToday && !isSelected
+                                  ? Border.all(color: AppTheme.primary, width: 1.5)
+                                  : null,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${day.day}',
+                                style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : isCurrentMonth
+                                          ? AppTheme.textPrimary
+                                          : AppTheme.textTertiary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 16),
+              // Summary row
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppTheme.background,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppTheme.border),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.today_rounded, color: AppTheme.primary, size: 20),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        '${DateFormat('MMM d').format(_selectedDate)} → ${DateFormat('MMM d').format(_endDate)}',
+                        style: AppTheme.titleMedium.copyWith(fontSize: 14),
+                      ),
+                    ),
+                    Text(
+                      '\$${budget.monthlyTotal.toStringAsFixed(2)}',
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                        color: AppTheme.primary,
+                      ),
+                    ),
+                    Text(
+                      ' / $dayCount days',
+                      style: AppTheme.bodyMedium.copyWith(fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.read<BudgetProvider>().setupBudget(
+                          monthlyTotal: budget.monthlyTotal,
+                          startDate: _selectedDate,
+                        );
+                    Navigator.pushNamed(context, '/initial-limit');
+                  },
+                  child: const Text('Confirm & Continue'),
+                ),
+              ),
+              const SizedBox(height: 28),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
