@@ -5,6 +5,9 @@ import 'theme/app_theme.dart';
 import 'providers/budget_provider.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding/welcome_screen.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/auth/signup_screen.dart';
+import 'screens/auth/forgot_password_screen.dart';
 import 'screens/onboarding/input_budget_screen.dart';
 import 'screens/onboarding/select_date_screen.dart';
 import 'screens/onboarding/initial_limit_screen.dart';
@@ -49,6 +52,9 @@ class DailyBurnApp extends StatelessWidget {
         routes: {
           '/splash': (_) => const SplashScreen(),
           '/welcome': (_) => const WelcomeScreen(),
+          '/login': (_) => const LoginScreen(),
+          '/signup': (_) => const SignupScreen(),
+          '/forgot-password': (_) => const ForgotPasswordScreen(),
           '/input-budget': (_) => const InputBudgetScreen(),
           '/select-date': (_) => const SelectDateScreen(),
           '/initial-limit': (_) => const InitialLimitScreen(),

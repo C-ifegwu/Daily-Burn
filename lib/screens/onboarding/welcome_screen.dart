@@ -103,20 +103,44 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     ),
                   ),
                   const Spacer(),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pushNamed(context, '/input-budget'),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Let's Do It", style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 16)),
-                          const SizedBox(width: 8),
-                          const Icon(Icons.arrow_forward_rounded, size: 20),
-                        ],
+                  const SizedBox(height: 32),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 56,
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.pushNamed(context, '/login'),
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: AppTheme.borderLight),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              backgroundColor: Colors.white,
+                            ),
+                            child: Text(
+                              "Log In",
+                              style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w700, 
+                                fontSize: 16,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: SizedBox(
+                          height: 56,
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.pushNamed(context, '/signup'),
+                            child: Text(
+                              "Sign Up", 
+                              style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 32),
                 ],
