@@ -112,7 +112,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           child: OutlinedButton(
                             onPressed: () => Navigator.pushNamed(context, '/login'),
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: AppTheme.borderLight),
+                              side: const BorderSide(color: AppTheme.border),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                               backgroundColor: Colors.white,
                             ),
