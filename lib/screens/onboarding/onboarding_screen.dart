@@ -8,9 +8,9 @@ class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: AppTheme.background,
-      body: const Center(child: Text('Redirecting...')),
+      body: Center(child: Text('Redirecting...')),
     );
   }
 }

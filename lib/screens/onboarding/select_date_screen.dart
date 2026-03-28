@@ -96,7 +96,7 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
                             style: AppTheme.titleMedium,
                           ),
                           const Spacer(),
-                          Icon(Icons.calendar_month_rounded, color: AppTheme.primary, size: 20),
+                          const Icon(Icons.calendar_month_rounded, color: AppTheme.primary, size: 20),
                         ],
                       ),
                     ),
@@ -175,7 +175,7 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.today_rounded, color: AppTheme.primary, size: 20),
+                    const Icon(Icons.today_rounded, color: AppTheme.primary, size: 20),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(

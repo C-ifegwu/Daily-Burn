@@ -59,7 +59,7 @@ class _ExpenseSuccessScreenState extends State<ExpenseSuccessScreen>
                       shape: BoxShape.circle,
                       border: Border.all(color: AppTheme.safeGreen.withAlpha(60), width: 2),
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Icon(Icons.check_rounded, color: AppTheme.safeGreen, size: 60),
                     ),
                   ),

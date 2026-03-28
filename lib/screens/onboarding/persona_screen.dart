@@ -7,6 +7,6 @@ class PersonaScreen extends StatelessWidget {
   const PersonaScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: AppTheme.background, body: const Center(child: Text('Redirecting...')));
+    return const Scaffold(backgroundColor: AppTheme.background, body: Center(child: Text('Redirecting...')));
   }
 }

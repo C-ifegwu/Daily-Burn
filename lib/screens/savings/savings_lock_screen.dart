@@ -287,8 +287,8 @@ class _SavingsLockScreenState extends State<SavingsLockScreen>
             _ImpactRow(label: 'Monthly Remaining', value: budget.monthlyRemaining, color: AppTheme.textPrimary),
             const SizedBox(height: 8),
             _ImpactRow(label: 'Savings Locked', value: _locked ? _savingsTarget : 0, color: AppTheme.primary),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
               child: Divider(color: AppTheme.border),
             ),
             _ImpactRow(label: 'Spendable Budget', value: spendable.clamp(0, double.infinity), color: AppTheme.safeGreen, isBold: true),
