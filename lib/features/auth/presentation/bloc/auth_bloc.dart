@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../../domain/usecases/google_signin_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
@@ -117,27 +119,42 @@ class AuthBloc {
   }
 
   String _mapError(Object error) {
-    final String message = error.toString();
+    // Handle FirebaseAuthException specifically
+    if (error is FirebaseAuthException) {
+      final String code = error.code;
 
-    if (message.contains('user-not-found')) {
-      return 'No account found with that email.';
+      switch (code) {
+        case 'user-not-found':
+          return 'No account found with that email.';
+        case 'wrong-password':
+          return 'Incorrect password.';
+        case 'email-already-in-use':
+          return 'This email is already in use.';
+        case 'weak-password':
+          return 'Password is too weak.';
+        case 'invalid-email':
+          return 'Invalid email address.';
+        case 'operation-not-allowed':
+          return 'This operation is not allowed.';
+        case 'too-many-requests':
+          return 'Too many login attempts. Please try again later.';
+        default:
+          return error.message ?? 'An authentication error occurred.';
+      }
     }
-    if (message.contains('wrong-password')) {
-      return 'Incorrect password.';
+
+    // Handle FirebaseException
+    if (error is FirebaseException) {
+      return error.message ?? 'A Firebase error occurred.';
     }
-    if (message.contains('email-already-in-use')) {
-      return 'This email is already in use.';
-    }
-    if (message.contains('weak-password')) {
-      return 'Password is too weak.';
-    }
-    if (message.contains('invalid-email')) {
-      return 'Invalid email address.';
-    }
-    if (message.contains('Authentication was cancelled')) {
+
+    // Handle custom cancellation
+    if (error.toString().contains('Authentication was cancelled')) {
       return 'Google sign in was cancelled.';
     }
 
+    // Fallback to string conversion
+    final String message = error.toString();
     return message.replaceFirst('Exception: ', '');
   }
 
