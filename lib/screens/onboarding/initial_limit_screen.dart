@@ -19,13 +19,17 @@ class _InitialLimitScreenState extends State<InitialLimitScreen>
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1200));
     _progressAnim = CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic);
     _ctrl.forward();
   }
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,76 +57,167 @@ class _InitialLimitScreenState extends State<InitialLimitScreen>
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-          child: Column(
-            children: [
-              const SizedBox(height: 16),
-              // State badge
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                decoration: BoxDecoration(
-                  color: AppTheme.safeGreen.withAlpha(25),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppTheme.safeGreen, shape: BoxShape.circle)),
-                    const SizedBox(width: 8),
-                    Text('Safe State', style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.safeGreen)),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 28),
-              Text('Calculating your\nfirst daily burn...', style: AppTheme.headlineLarge, textAlign: TextAlign.center),
-              const SizedBox(height: 36),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final bool compactWidth = constraints.maxWidth < 480;
+            final bool compactHeight = constraints.maxHeight < 760;
 
-              // ── Circular Progress Hero ─────────────────────────────
-              AnimatedBuilder(
-                animation: _progressAnim,
-                builder: (_, __) {
-                  return SizedBox(
-                    width: 240,
-                    height: 240,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Background ring
-                        SizedBox.expand(
-                          child: CircularProgressIndicator(
-                            value: 1.0,
-                            strokeWidth: 16,
-                            backgroundColor: Colors.transparent,
-                            valueColor: AlwaysStoppedAnimation(AppTheme.safeGreen.withAlpha(30)),
-                          ),
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: compactWidth ? 16 : 28),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 560,
+                    minHeight: constraints.maxHeight,
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(height: compactHeight ? 10 : 16),
+                      // State badge
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 7),
+                        decoration: BoxDecoration(
+                          color: AppTheme.safeGreen.withAlpha(25),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        // Animated fill ring
-                        SizedBox.expand(
-                          child: CircularProgressIndicator(
-                            value: _progressAnim.value * 0.12, // start low
-                            strokeWidth: 16,
-                            backgroundColor: Colors.transparent,
-                            valueColor: const AlwaysStoppedAnimation(AppTheme.safeGreen),
-                            strokeCap: StrokeCap.round,
-                          ),
-                        ),
-                        // Center content
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              '\$${daily.toStringAsFixed(2)}',
-                              style: GoogleFonts.inter(
-                                fontSize: 44,
-                                fontWeight: FontWeight.w800,
-                                color: AppTheme.textPrimary,
-                                letterSpacing: -2,
-                                height: 1.0,
+                            Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                    color: AppTheme.safeGreen,
+                                    shape: BoxShape.circle)),
+                            const SizedBox(width: 8),
+                            Text('Safe State',
+                                style: GoogleFonts.inter(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppTheme.safeGreen)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: compactHeight ? 16 : 28),
+                      Text('Calculating your\nfirst daily burn...',
+                          style: AppTheme.headlineLarge,
+                          textAlign: TextAlign.center),
+                      SizedBox(height: compactHeight ? 20 : 36),
+
+                      // ── Circular Progress Hero ─────────────────────────────
+                      AnimatedBuilder(
+                        animation: _progressAnim,
+                        builder: (_, __) {
+                          return SizedBox(
+                            width: 240,
+                            height: 240,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Background ring
+                                SizedBox.expand(
+                                  child: CircularProgressIndicator(
+                                    value: 1.0,
+                                    strokeWidth: 16,
+                                    backgroundColor: Colors.transparent,
+                                    valueColor: AlwaysStoppedAnimation(
+                                        AppTheme.safeGreen.withAlpha(30)),
+                                  ),
+                                ),
+                                // Animated fill ring
+                                SizedBox.expand(
+                                  child: CircularProgressIndicator(
+                                    value:
+                                        _progressAnim.value * 0.12, // start low
+                                    strokeWidth: 16,
+                                    backgroundColor: Colors.transparent,
+                                    valueColor: const AlwaysStoppedAnimation(
+                                        AppTheme.safeGreen),
+                                    strokeCap: StrokeCap.round,
+                                  ),
+                                ),
+                                // Center content
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '\$${daily.toStringAsFixed(2)}',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 44,
+                                        fontWeight: FontWeight.w800,
+                                        color: AppTheme.textPrimary,
+                                        letterSpacing: -2,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text('per day', style: AppTheme.bodyMedium),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+
+                      SizedBox(height: compactHeight ? 20 : 36),
+                      // ── Stats row ─────────────────────────────────────────
+                      if (compactWidth)
+                        Column(
+                          children: [
+                            _StatBox(
+                              label: 'Monthly Total',
+                              value:
+                                  '\$${budget.monthlyTotal.toStringAsFixed(2)}',
+                            ),
+                            const SizedBox(height: 12),
+                            _StatBox(
+                              label: '$daysLeft Days Left',
+                              value: '\$${remaining.toStringAsFixed(2)}',
+                            ),
+                          ],
+                        )
+                      else
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _StatBox(
+                                label: 'Monthly Total',
+                                value:
+                                    '\$${budget.monthlyTotal.toStringAsFixed(2)}',
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text('per day', style: AppTheme.bodyMedium),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _StatBox(
+                                label: '$daysLeft Days Left',
+                                value: '\$${remaining.toStringAsFixed(2)}',
+                              ),
+                            ),
+                          ],
+                        ),
+                      const SizedBox(height: 12),
+                      // ── Tip card ──────────────────────────────────────────
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppTheme.background,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: AppTheme.border),
+                        ),
+                        child: Row(
+                          children: [
+                            const Text('💡', style: TextStyle(fontSize: 20)),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Setting a Rollover Reserve: We will tell you anytime your finances and action plan need to be adjusted today under your goal.',
+                                style: AppTheme.bodyMedium
+                                    .copyWith(fontSize: 12, height: 1.5),
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -190,9 +285,8 @@ class _InitialLimitScreenState extends State<InitialLimitScreen>
                   ),
                 ),
               ),
-              const SizedBox(height: 28),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

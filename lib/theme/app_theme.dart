@@ -3,14 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // ── Brand Colors ──────────────────────────────────────────────
-  static const Color primary = Color(0xFFFF6B35);      // Orange
+  static const Color primary = Color(0xFFFF6B35); // Orange
   static const Color primaryLight = Color(0xFFFF8F65);
   static const Color primaryDark = Color(0xFFE04E1A);
 
   // ── Budget State Colors ───────────────────────────────────────
-  static const Color safeGreen = Color(0xFF34C759);    // Under 50%
+  static const Color safeGreen = Color(0xFF34C759); // Under 50%
   static const Color warningYellow = Color(0xFFFFB84D); // 50–80%
-  static const Color dangerRed = Color(0xFFFF3B30);    // Over 80%
+  static const Color dangerRed = Color(0xFFFF3B30); // Over 80%
 
   // ── Neutrals ─────────────────────────────────────────────────
   static const Color background = Color(0xFFF8F9FA);
@@ -97,7 +97,8 @@ class AppTheme {
           borderSide: const BorderSide(color: primary, width: 1.5),
         ),
         hintStyle: GoogleFonts.inter(color: textTertiary, fontSize: 15),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
     );
   }
@@ -163,22 +164,43 @@ class AppTheme {
   // ── Category Maps ─────────────────────────────────────────────
   static Map<String, Color> get categoryColors => {
         'Food': catFood,
+        'Food & Snacks': catFood,
         'Transport': catTransport,
         'Fun': catFun,
+        'Data & Airtime': catFun,
+        'Books & Supplies': catMisc,
+        'Hostel & Utilities': const Color(0xFF5B8CFF),
+        'Health & Pharmacy': const Color(0xFF3CB179),
+        'Social & Events': const Color(0xFFFF8A65),
+        'Emergency': const Color(0xFFE46D6D),
         'Misc': catMisc,
       };
 
   static Map<String, IconData> get categoryIcons => {
         'Food': Icons.restaurant_rounded,
+        'Food & Snacks': Icons.fastfood_rounded,
         'Transport': Icons.directions_bus_rounded,
         'Fun': Icons.sports_esports_rounded,
+        'Data & Airtime': Icons.signal_cellular_alt_rounded,
+        'Books & Supplies': Icons.menu_book_rounded,
+        'Hostel & Utilities': Icons.apartment_rounded,
+        'Health & Pharmacy': Icons.local_hospital_rounded,
+        'Social & Events': Icons.celebration_rounded,
+        'Emergency': Icons.warning_amber_rounded,
         'Misc': Icons.shopping_bag_rounded,
       };
 
   static Map<String, String> get categoryEmojis => {
         'Food': '🍔',
+        'Food & Snacks': '🍔',
         'Transport': '🚌',
         'Fun': '🎮',
+        'Data & Airtime': '📶',
+        'Books & Supplies': '📚',
+        'Hostel & Utilities': '🏠',
+        'Health & Pharmacy': '💊',
+        'Social & Events': '🎉',
+        'Emergency': '🆘',
         'Misc': '🛍️',
       };
 }
