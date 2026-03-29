@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
-import '../features/budget/data/models/transaction_model.dart';
-import '../features/budget/data/repositories/budget_repository.dart';
+import '../../data/models/transaction_model.dart';
+import '../../data/repositories/budget_repository.dart';
 
 class Transaction {
   final String id;
@@ -21,60 +21,110 @@ class Transaction {
   });
 }
 
-class BudgetProvider extends ChangeNotifier {
+abstract class BudgetEvent {
+  const BudgetEvent();
+}
+
+class LoadTransactionsEvent extends BudgetEvent {
+  const LoadTransactionsEvent();
+}
+
+class AddExpenseEvent extends BudgetEvent {
+  final TransactionModel transaction;
+
+  const AddExpenseEvent(this.transaction);
+}
+
+class UpdateExpenseEvent extends BudgetEvent {
+  final TransactionModel transaction;
+
+  const UpdateExpenseEvent(this.transaction);
+}
+
+class DeleteExpenseEvent extends BudgetEvent {
+  final String transactionId;
+
+  const DeleteExpenseEvent(this.transactionId);
+}
+
+abstract class BudgetState {
+  const BudgetState();
+}
+
+class BudgetInitial extends BudgetState {
+  const BudgetInitial();
+}
+
+class BudgetLoading extends BudgetState {
+  const BudgetLoading();
+}
+
+class BudgetLoaded extends BudgetState {
+  final List<TransactionModel> transactions;
+
+  const BudgetLoaded(this.transactions);
+}
+
+class BudgetSuccess extends BudgetState {
+  const BudgetSuccess();
+}
+
+class BudgetFailure extends BudgetState {
+  final String message;
+
+  const BudgetFailure(this.message);
+}
+
+class BudgetBloc extends ChangeNotifier {
   final BudgetRepository _repository;
+
+  final StreamController<BudgetEvent> _eventController =
+      StreamController<BudgetEvent>();
+  final StreamController<BudgetState> _stateController =
+      StreamController<BudgetState>.broadcast();
+
   StreamSubscription<List<TransactionModel>>? _transactionsSubscription;
-
-  BudgetProvider({BudgetRepository? repository})
-      : _repository = repository ?? BudgetRepository() {
-    _transactionsSubscription = _repository.getTransactions().listen((items) {
-      _transactions
-        ..clear()
-        ..addAll(items.map(_fromModel));
-      notifyListeners();
-    });
-  }
-
-  // ── Monthly Budget Settings ───────────────────────────────────
   double _monthlyTotal = 1250.0;
   DateTime _startDate = DateTime.now();
   bool _isSetup = false;
-
-  // ── Transactions ──────────────────────────────────────────────
   final List<Transaction> _transactions = [];
+  BudgetState _state = const BudgetInitial();
 
-  // ── Getters ───────────────────────────────────────────────────
+  BudgetBloc({BudgetRepository? repository})
+      : _repository = repository ?? BudgetRepository() {
+    _eventController.stream.listen(_handleEvent);
+    add(const LoadTransactionsEvent());
+  }
+
+  Stream<BudgetState> get stream => _stateController.stream;
+
+  BudgetState get state => _state;
   double get monthlyTotal => _monthlyTotal;
   DateTime get startDate => _startDate;
   bool get isSetup => _isSetup;
   List<Transaction> get transactions => List.unmodifiable(_transactions);
 
-  // Days from start to end of month
   int get totalDaysInPeriod {
     final end = DateTime(_startDate.year, _startDate.month + 1, _startDate.day);
     return end.difference(_startDate).inDays.clamp(1, 366);
   }
 
-  // Days left in period
   int get daysLeft {
     final now = DateTime.now();
     final end = DateTime(_startDate.year, _startDate.month + 1, _startDate.day);
     return end.difference(now).inDays.clamp(0, 366);
   }
 
-  // Daily burn limit
   double get dailyLimit {
     if (totalDaysInPeriod == 0) return 0;
     return _monthlyTotal / totalDaysInPeriod;
   }
 
-  // Adjusted daily limit based on remaining balance
   double get adjustedDailyLimit {
     if (daysLeft == 0) return 0;
     return monthlyRemaining / daysLeft;
   }
 
-  // Total spent this month
   double get totalSpentThisMonth {
     final now = DateTime.now();
     final monthStart = DateTime(now.year, now.month, 1);
@@ -83,11 +133,9 @@ class BudgetProvider extends ChangeNotifier {
         .fold(0.0, (s, t) => s + t.amount);
   }
 
-  // Monthly remaining
   double get monthlyRemaining =>
       (_monthlyTotal - totalSpentThisMonth).clamp(0, double.infinity);
 
-  // Today's spending
   double get todaySpent {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -96,31 +144,25 @@ class BudgetProvider extends ChangeNotifier {
         .fold(0.0, (s, t) => s + t.amount);
   }
 
-  // Today's remaining (safe to spend today)
   double get todayRemaining =>
       (adjustedDailyLimit - todaySpent).clamp(0, double.infinity);
 
-  // Percentage of today's limit spent
   double get todaySpentPct => adjustedDailyLimit > 0
       ? (todaySpent / adjustedDailyLimit).clamp(0.0, 1.0)
       : 0.0;
 
-  // Percentage of monthly limit spent
   double get monthlySpentPct => _monthlyTotal > 0
       ? (totalSpentThisMonth / _monthlyTotal).clamp(0.0, 1.0)
       : 0.0;
 
-  // Is overspent today
   bool get isOverspentToday => todaySpent > adjustedDailyLimit;
 
-  // Today's transactions
   List<Transaction> get todayTransactions {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     return _transactions.where((t) => t.dateTime.isAfter(today)).toList();
   }
 
-  // Spending by category (this month)
   Map<String, double> get spendingByCategory {
     final now = DateTime.now();
     final monthStart = DateTime(now.year, now.month, 1);
@@ -132,9 +174,77 @@ class BudgetProvider extends ChangeNotifier {
     return result;
   }
 
-  // ── Actions ───────────────────────────────────────────────────
-  void setupBudget(
-      {required double monthlyTotal, required DateTime startDate}) {
+  void add(BudgetEvent event) {
+    if (!_eventController.isClosed) {
+      _eventController.add(event);
+    }
+  }
+
+  Future<void> _handleEvent(BudgetEvent event) async {
+    if (event is LoadTransactionsEvent) {
+      await _loadTransactions();
+      return;
+    }
+    if (event is AddExpenseEvent) {
+      await _addExpense(event);
+      return;
+    }
+    if (event is UpdateExpenseEvent) {
+      await _updateExpense(event);
+      return;
+    }
+    if (event is DeleteExpenseEvent) {
+      await _deleteExpense(event);
+    }
+  }
+
+  Future<void> _loadTransactions() async {
+    _emit(const BudgetLoading());
+
+    await _transactionsSubscription?.cancel();
+    _transactionsSubscription = _repository.getTransactions().listen(
+          (transactions) {
+            _transactions
+              ..clear()
+              ..addAll(transactions.map(_fromModel));
+            _emit(BudgetLoaded(transactions));
+            notifyListeners();
+          },
+          onError: (Object error) => _emit(BudgetFailure(error.toString())),
+        );
+  }
+
+  Future<void> _addExpense(AddExpenseEvent event) async {
+    _emit(const BudgetLoading());
+    try {
+      await _repository.addTransaction(event.transaction);
+      _emit(const BudgetSuccess());
+    } catch (error) {
+      _emit(BudgetFailure(error.toString()));
+    }
+  }
+
+  Future<void> _updateExpense(UpdateExpenseEvent event) async {
+    _emit(const BudgetLoading());
+    try {
+      await _repository.updateTransaction(event.transaction);
+      _emit(const BudgetSuccess());
+    } catch (error) {
+      _emit(BudgetFailure(error.toString()));
+    }
+  }
+
+  Future<void> _deleteExpense(DeleteExpenseEvent event) async {
+    _emit(const BudgetLoading());
+    try {
+      await _repository.deleteTransaction(event.transactionId);
+      _emit(const BudgetSuccess());
+    } catch (error) {
+      _emit(BudgetFailure(error.toString()));
+    }
+  }
+
+  void setupBudget({required double monthlyTotal, required DateTime startDate}) {
     _monthlyTotal = monthlyTotal;
     _startDate = startDate;
     _isSetup = true;
@@ -154,19 +264,26 @@ class BudgetProvider extends ChangeNotifier {
 
     _transactions.insert(0, tx);
     notifyListeners();
-    await _repository.addTransaction(_toModel(tx));
+
+    add(AddExpenseEvent(_toModel(tx)));
   }
 
   Future<void> deleteTransaction(String id) async {
     _transactions.removeWhere((t) => t.id == id);
     notifyListeners();
-    await _repository.deleteTransaction(id);
+
+    add(DeleteExpenseEvent(id));
   }
 
-  Future<void> editTransaction(String id,
-      {double? amount, String? note, String? category}) async {
+  Future<void> editTransaction(
+    String id, {
+    double? amount,
+    String? note,
+    String? category,
+  }) async {
     final idx = _transactions.indexWhere((t) => t.id == id);
     if (idx == -1) return;
+
     final old = _transactions[idx];
     final updated = Transaction(
       id: old.id,
@@ -177,7 +294,8 @@ class BudgetProvider extends ChangeNotifier {
     );
     _transactions[idx] = updated;
     notifyListeners();
-    await _repository.updateTransaction(_toModel(updated));
+
+    add(UpdateExpenseEvent(_toModel(updated)));
   }
 
   void setMonthlyTotal(double total) {
@@ -185,8 +303,6 @@ class BudgetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ── Analytics helpers ─────────────────────────────────────────
-  /// Spend per day for the last [days] days, oldest first.
   List<double> dailySpendHistory(int days) {
     final now = DateTime.now();
     return List.generate(days, (i) {
@@ -199,13 +315,12 @@ class BudgetProvider extends ChangeNotifier {
     });
   }
 
-  /// Days in a row where daily spend <= adjustedDailyLimit.
   int get currentStreak {
     int streak = 0;
     final now = DateTime.now();
     for (int i = 0; i < 30; i++) {
-      final day =
-          DateTime(now.year, now.month, now.day).subtract(Duration(days: i));
+      final day = DateTime(now.year, now.month, now.day)
+          .subtract(Duration(days: i));
       final next = day.add(const Duration(days: 1));
       final daySpend = _transactions
           .where((t) => t.dateTime.isAfter(day) && t.dateTime.isBefore(next))
@@ -219,7 +334,6 @@ class BudgetProvider extends ChangeNotifier {
     return streak;
   }
 
-  /// Projected days until budget runs out at current spend rate.
   int get projectedDaysLeft {
     final history = dailySpendHistory(7);
     final nonZero = history.where((d) => d > 0);
@@ -229,7 +343,6 @@ class BudgetProvider extends ChangeNotifier {
     return (monthlyRemaining / avgDaily).floor();
   }
 
-  /// Average daily spend over past 7 days.
   double get avgDailySpend {
     final history = dailySpendHistory(7);
     final nonZero = history.where((d) => d > 0).toList();
@@ -237,14 +350,12 @@ class BudgetProvider extends ChangeNotifier {
     return nonZero.reduce((a, b) => a + b) / nonZero.length;
   }
 
-  /// Top spending category this month.
   String get topCategory {
     final cat = spendingByCategory;
     if (cat.isEmpty) return 'None';
     return cat.entries.reduce((a, b) => a.value > b.value ? a : b).key;
   }
 
-  /// Most recent transaction.
   Transaction? get latestTransaction =>
       _transactions.isEmpty ? null : _transactions.first;
 
@@ -269,9 +380,22 @@ class BudgetProvider extends ChangeNotifier {
     );
   }
 
+  void _emit(BudgetState state) {
+    _state = state;
+    if (!_stateController.isClosed) {
+      _stateController.add(state);
+    }
+  }
+
+  Future<void> close() async {
+    await _transactionsSubscription?.cancel();
+    await _eventController.close();
+    await _stateController.close();
+  }
+
   @override
   void dispose() {
-    _transactionsSubscription?.cancel();
+    close();
     super.dispose();
   }
 }
