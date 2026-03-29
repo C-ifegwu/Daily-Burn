@@ -23,16 +23,7 @@ class BudgetProvider extends ChangeNotifier {
   bool _isSetup = false;
 
   // ── Transactions ──────────────────────────────────────────────
-  final List<Transaction> _transactions = [
-    Transaction(id: '1', category: 'Food', amount: 8.50, note: 'Campus Cafe', dateTime: DateTime.now().subtract(const Duration(hours: 2))),
-    Transaction(id: '2', category: 'Transport', amount: 3.00, note: 'Bus fare', dateTime: DateTime.now().subtract(const Duration(hours: 5))),
-    Transaction(id: '3', category: 'Food', amount: 12.00, note: 'Family Fridge', dateTime: DateTime.now().subtract(const Duration(days: 1, hours: 2))),
-    Transaction(id: '4', category: 'Fun', amount: 15.00, note: 'Study Bro', dateTime: DateTime.now().subtract(const Duration(days: 1, hours: 8))),
-    Transaction(id: '5', category: 'Misc', amount: 22.00, note: 'Library - Books', dateTime: DateTime.now().subtract(const Duration(days: 2))),
-    Transaction(id: '6', category: 'Transport', amount: 6.00, note: 'Uber home', dateTime: DateTime.now().subtract(const Duration(days: 2, hours: 4))),
-    Transaction(id: '7', category: 'Food', amount: 9.50, note: 'Dinner', dateTime: DateTime.now().subtract(const Duration(days: 3))),
-    Transaction(id: '8', category: 'Misc', amount: 18.00, note: 'Stationery', dateTime: DateTime.now().subtract(const Duration(days: 4))),
-  ];
+  final List<Transaction> _transactions = [];
 
   // ── Getters ───────────────────────────────────────────────────
   double get monthlyTotal => _monthlyTotal;
@@ -75,7 +66,8 @@ class BudgetProvider extends ChangeNotifier {
   }
 
   // Monthly remaining
-  double get monthlyRemaining => (_monthlyTotal - totalSpentThisMonth).clamp(0, double.infinity);
+  double get monthlyRemaining =>
+      (_monthlyTotal - totalSpentThisMonth).clamp(0, double.infinity);
 
   // Today's spending
   double get todaySpent {
@@ -87,7 +79,8 @@ class BudgetProvider extends ChangeNotifier {
   }
 
   // Today's remaining (safe to spend today)
-  double get todayRemaining => (adjustedDailyLimit - todaySpent).clamp(0, double.infinity);
+  double get todayRemaining =>
+      (adjustedDailyLimit - todaySpent).clamp(0, double.infinity);
 
   // Percentage of today's limit spent
   double get todaySpentPct => adjustedDailyLimit > 0
@@ -114,14 +107,16 @@ class BudgetProvider extends ChangeNotifier {
     final now = DateTime.now();
     final monthStart = DateTime(now.year, now.month, 1);
     final result = <String, double>{};
-    for (final t in _transactions.where((t) => t.dateTime.isAfter(monthStart))) {
+    for (final t
+        in _transactions.where((t) => t.dateTime.isAfter(monthStart))) {
       result[t.category] = (result[t.category] ?? 0) + t.amount;
     }
     return result;
   }
 
   // ── Actions ───────────────────────────────────────────────────
-  void setupBudget({required double monthlyTotal, required DateTime startDate}) {
+  void setupBudget(
+      {required double monthlyTotal, required DateTime startDate}) {
     _monthlyTotal = monthlyTotal;
     _startDate = startDate;
     _isSetup = true;
@@ -138,7 +133,8 @@ class BudgetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void editTransaction(String id, {double? amount, String? note, String? category}) {
+  void editTransaction(String id,
+      {double? amount, String? note, String? category}) {
     final idx = _transactions.indexWhere((t) => t.id == id);
     if (idx == -1) return;
     final old = _transactions[idx];
@@ -162,7 +158,8 @@ class BudgetProvider extends ChangeNotifier {
   List<double> dailySpendHistory(int days) {
     final now = DateTime.now();
     return List.generate(days, (i) {
-      final day = DateTime(now.year, now.month, now.day).subtract(Duration(days: days - 1 - i));
+      final day = DateTime(now.year, now.month, now.day)
+          .subtract(Duration(days: days - 1 - i));
       final next = day.add(const Duration(days: 1));
       return _transactions
           .where((t) => t.dateTime.isAfter(day) && t.dateTime.isBefore(next))
@@ -175,7 +172,8 @@ class BudgetProvider extends ChangeNotifier {
     int streak = 0;
     final now = DateTime.now();
     for (int i = 0; i < 30; i++) {
-      final day = DateTime(now.year, now.month, now.day).subtract(Duration(days: i));
+      final day =
+          DateTime(now.year, now.month, now.day).subtract(Duration(days: i));
       final next = day.add(const Duration(days: 1));
       final daySpend = _transactions
           .where((t) => t.dateTime.isAfter(day) && t.dateTime.isBefore(next))
@@ -215,5 +213,6 @@ class BudgetProvider extends ChangeNotifier {
   }
 
   /// Most recent transaction.
-  Transaction? get latestTransaction => _transactions.isEmpty ? null : _transactions.first;
+  Transaction? get latestTransaction =>
+      _transactions.isEmpty ? null : _transactions.first;
 }
