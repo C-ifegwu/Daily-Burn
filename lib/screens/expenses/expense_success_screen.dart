@@ -51,6 +51,7 @@ class _ExpenseSuccessScreenState extends State<ExpenseSuccessScreen>
         child: Padding(
           padding: const EdgeInsets.all(28),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
               // ── Check animation ─────────────────────────────────
@@ -64,7 +65,9 @@ class _ExpenseSuccessScreenState extends State<ExpenseSuccessScreen>
                     decoration: BoxDecoration(
                       color: AppTheme.safeGreen.withAlpha(20),
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppTheme.safeGreen.withAlpha(60), width: 2),
+                      border: Border.all(
+                          color: AppTheme.safeGreen.withAlpha(60),
+                          width: 2),
                     ),
                     child: const Center(
                       child: Icon(Icons.check_rounded, color: AppTheme.safeGreen, size: 60),
@@ -72,32 +75,7 @@ class _ExpenseSuccessScreenState extends State<ExpenseSuccessScreen>
                   ),
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // ── Check animation ─────────────────────────────────
-                  FadeTransition(
-                    opacity: _fade,
-                    child: ScaleTransition(
-                      scale: _scale,
-                      child: Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: AppTheme.safeGreen.withAlpha(20),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: AppTheme.safeGreen.withAlpha(60),
-                              width: 2),
-                        ),
-                        child: Center(
-                          child: Icon(Icons.check_rounded,
-                              color: AppTheme.safeGreen, size: 60),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 28),
+              const SizedBox(height: 28),
                   Text('Expense Recorded!', style: AppTheme.headlineMedium),
                   const SizedBox(height: 6),
                   Text('Great job tracking your spending.',
@@ -201,16 +179,13 @@ class _ExpenseSuccessScreenState extends State<ExpenseSuccessScreen>
                     onPressed: () => Navigator.pushNamedAndRemoveUntil(
                         context, '/home', (_) => false),
                     child: Text('Skip',
-                        style: AppTheme.bodyMedium
-                            .copyWith(color: AppTheme.textSecondary)),
+                        style: AppTheme.bodyMedium.copyWith(color: AppTheme.textSecondary)),
                   ),
                   const SizedBox(height: 8),
                 ],
               ),
             ),
           ),
-        ),
-      ),
     );
   }
 }

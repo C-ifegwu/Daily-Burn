@@ -214,73 +214,31 @@ class _InitialLimitScreenState extends State<InitialLimitScreen>
                             Expanded(
                               child: Text(
                                 'Setting a Rollover Reserve: We will tell you anytime your finances and action plan need to be adjusted today under your goal.',
-                                style: AppTheme.bodyMedium
-                                    .copyWith(fontSize: 12, height: 1.5),
+                                style: AppTheme.bodyMedium.copyWith(fontSize: 12, height: 1.5),
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-
-              const SizedBox(height: 36),
-              // ── Stats row ─────────────────────────────────────────
-              Row(
-                children: [
-                  Expanded(
-                    child: _StatBox(
-                      label: 'Monthly Total',
-                      value: '\$${budget.monthlyTotal.toStringAsFixed(2)}',
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _StatBox(
-                      label: '$daysLeft Days Left',
-                      value: '\$${remaining.toStringAsFixed(2)}',
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              // ── Tip card ──────────────────────────────────────────
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppTheme.background,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppTheme.border),
-                ),
-                child: Row(
-                  children: [
-                    const Text('💡', style: TextStyle(fontSize: 20)),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Setting a Rollover Reserve: We will tell you anytime your finances and action plan need to be adjusted today under your goal.',
-                        style: AppTheme.bodyMedium.copyWith(fontSize: 12, height: 1.5),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
-                  style: ElevatedButton.styleFrom(backgroundColor: AppTheme.safeGreen),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Enter Dashboard', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: Colors.white)),
-                      SizedBox(width: 8),
-                      Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
+
+                      const SizedBox(height: 36),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
+                          style: ElevatedButton.styleFrom(backgroundColor: AppTheme.safeGreen),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Enter Dashboard', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: Colors.white)),
+                              SizedBox(width: 8),
+                              Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
