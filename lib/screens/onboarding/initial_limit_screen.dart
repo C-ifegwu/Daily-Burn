@@ -59,17 +59,20 @@ class _InitialLimitScreenState extends State<InitialLimitScreen>
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
+            final bool compactWidth = constraints.maxWidth < 480;
+            final bool compactHeight = constraints.maxHeight < 760;
+
             return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
+              padding: EdgeInsets.symmetric(horizontal: compactWidth ? 16 : 28),
               child: Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxWidth: 520,
+                    maxWidth: 560,
                     minHeight: constraints.maxHeight,
                   ),
                   child: Column(
                     children: [
-                      const SizedBox(height: 16),
+                      SizedBox(height: compactHeight ? 10 : 16),
                       // State badge
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -96,11 +99,11 @@ class _InitialLimitScreenState extends State<InitialLimitScreen>
                           ],
                         ),
                       ),
-                      const SizedBox(height: 28),
+                      SizedBox(height: compactHeight ? 16 : 28),
                       Text('Calculating your\nfirst daily burn...',
                           style: AppTheme.headlineLarge,
                           textAlign: TextAlign.center),
-                      const SizedBox(height: 36),
+                      SizedBox(height: compactHeight ? 20 : 36),
 
                       // ── Circular Progress Hero ─────────────────────────────
                       AnimatedBuilder(
@@ -158,26 +161,42 @@ class _InitialLimitScreenState extends State<InitialLimitScreen>
                         },
                       ),
 
-                      const SizedBox(height: 36),
+                      SizedBox(height: compactHeight ? 20 : 36),
                       // ── Stats row ─────────────────────────────────────────
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _StatBox(
+                      if (compactWidth)
+                        Column(
+                          children: [
+                            _StatBox(
                               label: 'Monthly Total',
                               value:
                                   '\$${budget.monthlyTotal.toStringAsFixed(2)}',
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _StatBox(
+                            const SizedBox(height: 12),
+                            _StatBox(
                               label: '$daysLeft Days Left',
                               value: '\$${remaining.toStringAsFixed(2)}',
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        )
+                      else
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _StatBox(
+                                label: 'Monthly Total',
+                                value:
+                                    '\$${budget.monthlyTotal.toStringAsFixed(2)}',
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _StatBox(
+                                label: '$daysLeft Days Left',
+                                value: '\$${remaining.toStringAsFixed(2)}',
+                              ),
+                            ),
+                          ],
+                        ),
                       const SizedBox(height: 12),
                       // ── Tip card ──────────────────────────────────────────
                       Container(

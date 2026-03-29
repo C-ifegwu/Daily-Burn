@@ -29,13 +29,15 @@ class _AmountInputScreenState extends State<AmountInputScreen> {
 
   void _backspace() {
     setState(() {
-      _amount = _amount.length > 1 ? _amount.substring(0, _amount.length - 1) : '0';
+      _amount =
+          _amount.length > 1 ? _amount.substring(0, _amount.length - 1) : '0';
     });
   }
 
   double get _value => double.tryParse(_amount) ?? 0;
 
-  Color get _catColor => AppTheme.categoryColors[widget.category] ?? AppTheme.primary;
+  Color get _catColor =>
+      AppTheme.categoryColors[widget.category] ?? AppTheme.primary;
   String get _catEmoji => AppTheme.categoryEmojis[widget.category] ?? '💰';
 
   @override
@@ -85,7 +87,11 @@ class _AmountInputScreenState extends State<AmountInputScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
-                        child: Text('\$', style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w400, color: AppTheme.textSecondary)),
+                        child: Text('\$',
+                            style: GoogleFonts.inter(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w400,
+                                color: AppTheme.textSecondary)),
                       ),
                       Text(
                         _amount,
@@ -103,7 +109,8 @@ class _AmountInputScreenState extends State<AmountInputScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: AppTheme.dangerRed.withAlpha(20),
                           borderRadius: BorderRadius.circular(20),
@@ -111,11 +118,15 @@ class _AmountInputScreenState extends State<AmountInputScreen> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.warning_amber_rounded, color: AppTheme.dangerRed, size: 14),
+                            const Icon(Icons.warning_amber_rounded,
+                                color: AppTheme.dangerRed, size: 14),
                             const SizedBox(width: 6),
                             Text(
                               'This will exceed today\'s limit!',
-                              style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.dangerRed),
+                              style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppTheme.dangerRed),
                             ),
                           ],
                         ),
@@ -125,6 +136,47 @@ class _AmountInputScreenState extends State<AmountInputScreen> {
               ),
             ),
             const SizedBox(height: 20),
+            // ── Quick Amount Chips ─────────────────────────────────
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                alignment: WrapAlignment.center,
+                children: [5, 10, 20, 50, 100, 200].map((amt) {
+                  return GestureDetector(
+                    onTap: () => setState(() => _amount = '$amt'),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: _value == amt.toDouble()
+                            ? _catColor
+                            : _catColor.withAlpha(25),
+                        border: Border.all(
+                          color: _value == amt.toDouble()
+                              ? _catColor
+                              : _catColor.withAlpha(80),
+                          width: _value == amt.toDouble() ? 2 : 1,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '\$$amt',
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: _value == amt.toDouble()
+                              ? Colors.white
+                              : AppTheme.textPrimary,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            const SizedBox(height: 16),
             // ── Numpad ─────────────────────────────────────────────
             Expanded(child: _buildNumpad()),
             // ── Add Expense CTA ───────────────────────────────────
@@ -139,7 +191,9 @@ class _AmountInputScreenState extends State<AmountInputScreen> {
                     backgroundColor: _value > 0 ? _catColor : AppTheme.border,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('Apply Now Category', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                  child: const Text('Add to \$',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
                 ),
               ),
             ),
@@ -168,26 +222,40 @@ class _AmountInputScreenState extends State<AmountInputScreen> {
   }
 
   Widget _buildNumpad() {
-    final keys = ['1','2','3','4','5','6','7','8','9','.','0','⌫'];
+    final keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', '⌫'];
     return GridView.count(
       crossAxisCount: 3,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      childAspectRatio: 1.8,
+      childAspectRatio: 1.6,
       children: keys.map((k) {
+        final isBackspace = k == '⌫';
         return GestureDetector(
-          onTap: () => k == '⌫' ? _backspace() : _append(k),
+          onTap: () => isBackspace ? _backspace() : _append(k),
           child: Container(
-            margin: const EdgeInsets.all(4),
+            margin: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: k == '⌫' ? AppTheme.surfaceVariant : Colors.transparent,
-              borderRadius: BorderRadius.circular(12),
+              color: isBackspace
+                  ? AppTheme.dangerRed.withAlpha(15)
+                  : _catColor.withAlpha(12),
+              border: Border.all(
+                color: isBackspace
+                    ? AppTheme.dangerRed.withAlpha(40)
+                    : _catColor.withAlpha(40),
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(14),
             ),
             child: Center(
-              child: k == '⌫'
-                  ? const Icon(Icons.backspace_outlined, color: AppTheme.textSecondary, size: 22)
-                  : Text(k, style: GoogleFonts.inter(fontSize: 26, fontWeight: FontWeight.w400, color: AppTheme.textPrimary)),
+              child: isBackspace
+                  ? const Icon(Icons.backspace_outlined,
+                      color: AppTheme.dangerRed, size: 24)
+                  : Text(k,
+                      style: GoogleFonts.inter(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w500,
+                          color: AppTheme.textPrimary)),
             ),
           ),
         );

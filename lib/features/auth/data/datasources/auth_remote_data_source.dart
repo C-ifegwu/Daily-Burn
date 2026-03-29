@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 /// Contract for remote auth operations.
@@ -32,16 +34,29 @@ class AuthCancelledException implements Exception {
 
 class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
   final FirebaseAuth? _firebaseAuthOverride;
-  final GoogleSignIn _googleSignIn;
+  final FirebaseFirestore? _firestoreOverride;
+  final GoogleSignIn? _googleSignInOverride;
+  GoogleSignIn? _googleSignInInstance;
 
   FirebaseAuth get _firebaseAuth =>
       _firebaseAuthOverride ?? FirebaseAuth.instance;
+  FirebaseFirestore get _firestore =>
+      _firestoreOverride ?? FirebaseFirestore.instance;
+  GoogleSignIn get _googleSignIn {
+    if (_googleSignInOverride != null) {
+      return _googleSignInOverride!;
+    }
+    _googleSignInInstance ??= _createGoogleSignIn();
+    return _googleSignInInstance!;
+  }
 
   FirebaseAuthRemoteDataSource({
     FirebaseAuth? firebaseAuth,
+    FirebaseFirestore? firestore,
     GoogleSignIn? googleSignIn,
   })  : _firebaseAuthOverride = firebaseAuth,
-        _googleSignIn = googleSignIn ?? GoogleSignIn();
+        _firestoreOverride = firestore,
+        _googleSignInOverride = googleSignIn;
 
   @override
   Future<Map<String, dynamic>> login({
@@ -60,6 +75,8 @@ class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       if (user == null) {
         throw StateError('Unable to authenticate user.');
       }
+
+      await _upsertUserDocument(user);
 
       return _toUserJson(user);
     } catch (error) {
@@ -93,6 +110,7 @@ class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       }
 
       final User latestUser = _firebaseAuth.currentUser ?? createdUser;
+      await _upsertUserDocument(latestUser);
       return _toUserJson(latestUser);
     } catch (error) {
       throw Exception(_normalizeAuthError(error));
@@ -123,6 +141,8 @@ class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
         throw StateError('Unable to authenticate Google user.');
       }
 
+      await _upsertUserDocument(user);
+
       return _toUserJson(user);
     } catch (error) {
       if (error is AuthCancelledException) {
@@ -134,10 +154,10 @@ class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
 
   @override
   Future<void> logout() async {
-    await Future.wait(<Future<void>>[
-      _firebaseAuth.signOut(),
-      _googleSignIn.signOut(),
-    ]);
+    await _firebaseAuth.signOut();
+    if (_googleSignInOverride != null || _googleSignInInstance != null) {
+      await _googleSignIn.signOut();
+    }
   }
 
   Map<String, dynamic> _toUserJson(User user) {
@@ -146,6 +166,42 @@ class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       'email': user.email ?? '',
       'displayName': user.displayName,
     };
+  }
+
+  Future<void> _upsertUserDocument(User user) async {
+    try {
+      await user.getIdToken(true);
+      await _firestore.collection('users').doc(user.uid).set(
+        <String, dynamic>{
+          'uid': user.uid,
+          'userId': user.uid,
+          'email': user.email ?? '',
+          'displayName': user.displayName ?? '',
+          'photoUrl': user.photoURL,
+          'lastLoginAt': FieldValue.serverTimestamp(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        },
+        SetOptions(merge: true),
+      );
+    } catch (error) {
+      debugPrint(
+        'Failed to upsert Firestore user profile: $error. Check Firestore rules for users/{uid}.',
+      );
+    }
+  }
+
+  GoogleSignIn _createGoogleSignIn() {
+    if (!kIsWeb) {
+      return GoogleSignIn();
+    }
+
+    const String webClientId = String.fromEnvironment('GOOGLE_WEB_CLIENT_ID');
+    if (webClientId.isEmpty) {
+      throw StateError(
+        'Google Sign-In is not configured for web. Start with --dart-define=GOOGLE_WEB_CLIENT_ID=<your web client id> or add the google-signin client meta tag in web/index.html.',
+      );
+    }
+    return GoogleSignIn(clientId: webClientId);
   }
 
   void _ensureFirebaseInitialized() {
@@ -165,6 +221,9 @@ class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
     }
 
     final String raw = error.toString();
+    if (raw.contains('Google Sign-In is not configured for web')) {
+      return 'Google Sign-In is not configured for web. Add GOOGLE_WEB_CLIENT_ID and restart the app.';
+    }
     if (raw.contains('JavaScriptObject') && raw.contains('FirebaseException')) {
       return 'Firebase web configuration is invalid or incomplete. Run FlutterFire setup and restart the app.';
     }
