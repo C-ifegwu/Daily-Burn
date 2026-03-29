@@ -79,23 +79,45 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
             final bool compactWidth = constraints.maxWidth < 420;
             final double horizontalPadding = compactWidth ? 16 : 20;
 
-            return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: 560,
-                    minHeight: constraints.maxHeight,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 20),
-                      Text('Select Start Date', style: AppTheme.headlineMedium),
-                      const SizedBox(height: 6),
-                      Text(
-                        'When should we start tracking your budget?',
-                        style: AppTheme.bodyMedium,
+              // Calendar card
+              Container(
+                decoration: BoxDecoration(
+                  color: AppTheme.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppTheme.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(10),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    // Month header
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                      child: Row(
+                        children: [
+                          Text(
+                            DateFormat('MMMM yyyy').format(_focusedMonth),
+                            style: AppTheme.titleMedium,
+                          ),
+                          const Spacer(),
+                          const Icon(Icons.calendar_month_rounded, color: AppTheme.primary, size: 20),
+                        ],
+                      ),
+                    ),
+                    // Day headers
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        children: ['Su','Mo','Tu','We','Th','Fr','Sa'].map((d) => Expanded(
+                          child: Center(
+                            child: Text(d, style: AppTheme.labelSmall.copyWith(fontWeight: FontWeight.w700)),
+                          ),
+                        )).toList(),
                       ),
                       const SizedBox(height: 24),
 
@@ -178,92 +200,23 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
                                         day.month == DateTime.now().month &&
                                         day.day == DateTime.now().day;
 
-                                return GestureDetector(
-                                  onTap: isCurrentMonth
-                                      ? () {
-                                          setState(() => _selectedDate = day);
-                                          _continueToNextStep(budget);
-                                        }
-                                      : null,
-                                  child: Container(
-                                    margin: const EdgeInsets.all(2),
-                                    decoration: BoxDecoration(
-                                      color: isSelected
-                                          ? AppTheme.primary
-                                          : Colors.transparent,
-                                      shape: BoxShape.circle,
-                                      border: isToday && !isSelected
-                                          ? Border.all(
-                                              color: AppTheme.primary,
-                                              width: 1.5)
-                                          : null,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '${day.day}',
-                                        style: GoogleFonts.inter(
-                                          fontSize: 13,
-                                          fontWeight: isSelected
-                                              ? FontWeight.w700
-                                              : FontWeight.w400,
-                                          color: isSelected
-                                              ? Colors.white
-                                              : isCurrentMonth
-                                                  ? AppTheme.textPrimary
-                                                  : AppTheme.textTertiary,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                            const SizedBox(height: 8),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-                      // Summary row
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppTheme.background,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: AppTheme.border),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.today_rounded,
-                                color: AppTheme.primary, size: 20),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                '${DateFormat('MMM d').format(_selectedDate)} → ${DateFormat('MMM d').format(_endDate)}',
-                                style:
-                                    AppTheme.titleMedium.copyWith(fontSize: 14),
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '\$${budget.monthlyTotal.toStringAsFixed(2)}',
-                                  style: GoogleFonts.inter(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 15,
-                                    color: AppTheme.primary,
-                                  ),
-                                ),
-                                Text(
-                                  '$dayCount days',
-                                  style: AppTheme.bodyMedium
-                                      .copyWith(fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+              const SizedBox(height: 16),
+              // Summary row
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppTheme.background,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppTheme.border),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.today_rounded, color: AppTheme.primary, size: 20),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        '${DateFormat('MMM d').format(_selectedDate)} → ${DateFormat('MMM d').format(_endDate)}',
+                        style: AppTheme.titleMedium.copyWith(fontSize: 14),
                       ),
                       const SizedBox(height: 20),
                       SizedBox(

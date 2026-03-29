@@ -14,48 +14,28 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final budget = context.watch<BudgetProvider>();
-    final User? authUser = FirebaseAuth.instance.currentUser;
-
-    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-      stream: authUser == null
-          ? null
-          : FirebaseFirestore.instance
-              .collection('users')
-              .doc(authUser.uid)
-              .snapshots(),
-      builder: (context, snapshot) {
-        final Map<String, dynamic>? profile = snapshot.data?.data();
-        final String dbDisplayName =
-            (profile?['displayName'] as String? ?? '').trim();
-        final String authDisplayName = (authUser?.displayName ?? '').trim();
-        final String displayName =
-            dbDisplayName.isNotEmpty ? dbDisplayName : authDisplayName;
-        final String email =
-            (profile?['email'] as String? ?? authUser?.email ?? '').trim();
-        final String avatarSource =
-            displayName.isNotEmpty ? displayName : email;
-        final String avatarLetter = avatarSource.isNotEmpty
-            ? avatarSource.characters.first.toUpperCase()
-            : 'U';
-
-        return Scaffold(
-          backgroundColor: AppTheme.background,
-          appBar: AppBar(
-              backgroundColor: AppTheme.background,
-              title: const Text('Profile')),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Avatar card
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      color: AppTheme.surface,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppTheme.border)),
-                  child: Row(
+    return Scaffold(
+      backgroundColor: AppTheme.background,
+      appBar: AppBar(backgroundColor: AppTheme.background, title: const Text('Profile')),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Avatar card
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(color: AppTheme.surface, borderRadius: BorderRadius.circular(20), border: Border.all(color: AppTheme.border)),
+              child: Row(
+                children: [
+                  Container(
+                    width: 60, height: 60,
+                    decoration: const BoxDecoration(gradient: LinearGradient(colors: [AppTheme.primaryLight, AppTheme.primaryDark], begin: Alignment.topLeft, end: Alignment.bottomRight), shape: BoxShape.circle),
+                    child: Center(child: Text('A', style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w800, color: Colors.white))),
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         width: 60,

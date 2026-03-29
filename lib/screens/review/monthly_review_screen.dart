@@ -111,7 +111,7 @@ class MonthlyReviewScreen extends StatelessWidget {
                             gridData: FlGridData(
                               show: true,
                               drawVerticalLine: false,
-                              getDrawingHorizontalLine: (_) => FlLine(color: AppTheme.border, strokeWidth: 1),
+                              getDrawingHorizontalLine: (_) => const FlLine(color: AppTheme.border, strokeWidth: 1),
                             ),
                             borderData: FlBorderData(show: false),
                             titlesData: FlTitlesData(

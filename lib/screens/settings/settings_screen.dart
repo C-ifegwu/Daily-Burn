@@ -24,219 +24,183 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final budget = context.watch<BudgetProvider>();
     final User? authUser = FirebaseAuth.instance.currentUser;
 
-    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-      stream: authUser == null
-          ? null
-          : FirebaseFirestore.instance
-              .collection('users')
-              .doc(authUser.uid)
-              .snapshots(),
-      builder: (context, snapshot) {
-        final Map<String, dynamic>? profile = snapshot.data?.data();
-        final String dbDisplayName =
-            (profile?['displayName'] as String? ?? '').trim();
-        final String authDisplayName = (authUser?.displayName ?? '').trim();
-        final String displayName =
-            dbDisplayName.isNotEmpty ? dbDisplayName : authDisplayName;
-        final String email =
-            (profile?['email'] as String? ?? authUser?.email ?? '').trim();
-        final String avatarSource =
-            displayName.isNotEmpty ? displayName : email;
-        final String avatarLetter = avatarSource.isNotEmpty
-            ? avatarSource.characters.first.toUpperCase()
-            : 'U';
-
-        return Scaffold(
-          backgroundColor: AppTheme.background,
-          appBar: AppBar(
-            backgroundColor: AppTheme.background,
-            title: const Text('Settings'),
-            automaticallyImplyLeading: false,
-          ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ── Profile card ──────────────────────────────────────
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppTheme.surface,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AppTheme.border),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppTheme.primaryLight,
-                              AppTheme.primaryDark
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Text(avatarLetter,
-                              style: GoogleFonts.inter(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white)),
-                        ),
+    return Scaffold(
+      backgroundColor: AppTheme.background,
+      appBar: AppBar(
+        backgroundColor: AppTheme.background,
+        title: const Text('Settings'),
+        automaticallyImplyLeading: false,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Profile card ──────────────────────────────────────
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppTheme.surface,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppTheme.border),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [AppTheme.primaryLight, AppTheme.primaryDark],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              displayName.isNotEmpty
-                                  ? displayName
-                                  : 'Signed in user',
-                              style:
-                                  AppTheme.titleMedium.copyWith(fontSize: 18),
-                            ),
-                            Text(
-                              email.isNotEmpty ? email : 'No email linked',
-                              style: AppTheme.bodyMedium.copyWith(fontSize: 13),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Icon(Icons.edit_rounded,
-                          color: AppTheme.textSecondary, size: 18),
-                    ],
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text('A',
+                          style: GoogleFonts.inter(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white)),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 24),
-
-                // ── Budget Summary ────────────────────────────────────
-                _SectionTitle('Budget'),
-                _InfoCard(children: [
-                  _InfoRow(
-                      label: 'Monthly Total',
-                      value: '\$${budget.monthlyTotal.toStringAsFixed(2)}'),
-                  _InfoRow(
-                      label: 'Start Date',
-                      value: DateFormat('MMM d, y').format(budget.startDate)),
-                  _InfoRow(
-                      label: 'Daily Limit',
-                      value:
-                          '\$${budget.adjustedDailyLimit.toStringAsFixed(2)}/day'),
-                  _InfoRow(
-                      label: 'Days Remaining',
-                      value: '${budget.daysLeft} days'),
-                ]),
-                const SizedBox(height: 20),
-
-                // ── Tools & Features ──────────────────────────────────
-                _SectionTitle('Tools & Features'),
-                _InfoCard(children: [
-                  _ActionRow(
-                    icon: Icons.notifications_none_rounded,
-                    label: 'Notifications',
-                    subtitle: 'Alerts and spending nudges',
-                    color: AppTheme.primary,
-                    onTap: () => Navigator.pushNamed(context, '/notifications'),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Alex',
+                            style: AppTheme.titleMedium.copyWith(fontSize: 18)),
+                        Text('alex@university.edu',
+                            style: AppTheme.bodyMedium.copyWith(fontSize: 13)),
+                      ],
+                    ),
                   ),
-                  _ActionRow(
-                    icon: Icons.track_changes_rounded,
-                    label: 'My Goals',
-                    subtitle: 'Track your savings goals',
-                    color: AppTheme.primary,
-                    onTap: () => Navigator.pushNamed(context, '/goals'),
-                  ),
-                  _ActionRow(
-                    icon: Icons.lock_rounded,
-                    label: 'Savings Lock',
-                    subtitle: 'Protect money from spending',
-                    color: AppTheme.primary,
-                    onTap: () => Navigator.pushNamed(context, '/savings-lock'),
-                  ),
-                  _ActionRow(
-                    icon: Icons.bar_chart_rounded,
-                    label: 'Insights',
-                    subtitle: 'Charts & spending breakdown',
-                    color: AppTheme.primary,
-                    onTap: () => Navigator.pushNamed(context, '/insights'),
-                  ),
-                  _ActionRow(
-                    icon: Icons.trending_up_rounded,
-                    label: 'Budget Forecast',
-                    subtitle: 'Projected spend & on-track status',
-                    color: AppTheme.primary,
-                    onTap: () => Navigator.pushNamed(context, '/forecast'),
-                  ),
-                  _ActionRow(
-                    icon: Icons.calendar_month_rounded,
-                    label: 'Monthly Review',
-                    subtitle: 'How did you do this month?',
-                    color: AppTheme.primary,
-                    onTap: () =>
-                        Navigator.pushNamed(context, '/monthly-review'),
-                  ),
-                ]),
-                const SizedBox(height: 20),
-
-                // ── Preferences ───────────────────────────────────────
-                _SectionTitle('Preferences'),
-                _InfoCard(children: [
-                  _ToggleRow(
-                      label: 'Daily Reminders',
-                      value: _dailyReminders,
-                      onChanged: (v) => setState(() => _dailyReminders = v)),
-                  _ToggleRow(
-                      label: 'Overspend Alerts',
-                      value: _overspendAlerts,
-                      onChanged: (v) => setState(() => _overspendAlerts = v)),
-                  _ToggleRow(
-                      label: 'Weekly Summary',
-                      value: _weeklySummary,
-                      onChanged: (v) => setState(() => _weeklySummary = v)),
-                ]),
-                const SizedBox(height: 20),
-
-                // ── Budget Setup ──────────────────────────────────────
-                _SectionTitle('Budget Setup'),
-                _InfoCard(children: [
-                  _ActionRow(
-                    icon: Icons.edit_rounded,
-                    label: 'Edit Monthly Budget',
-                    color: AppTheme.primary,
-                    onTap: () => Navigator.pushNamed(context, '/input-budget'),
-                  ),
-                  _ActionRow(
-                    icon: Icons.calendar_today_rounded,
-                    label: 'Change Start Date',
-                    color: AppTheme.primary,
-                    onTap: () => Navigator.pushNamed(context, '/select-date'),
-                  ),
-                  _ActionRow(
-                    icon: Icons.delete_outline_rounded,
-                    label: 'Reset All Data',
-                    color: AppTheme.dangerRed,
-                    onTap: () => _showResetDialog(context),
-                  ),
-                ]),
-                const SizedBox(height: 20),
-
-                // ── App info ──────────────────────────────────────────
-                _SectionTitle('App'),
-                _InfoCard(children: [
-                  _InfoRow(label: 'Version', value: 'v1.0.0'),
-                  _InfoRow(label: 'Built for', value: 'University Students'),
-                ]),
-              ],
+                  const Icon(Icons.edit_rounded,
+                      color: AppTheme.textSecondary, size: 18),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+            const SizedBox(height: 24),
+
+            // ── Budget Summary ────────────────────────────────────
+            const _SectionTitle('Budget'),
+            _InfoCard(children: [
+              _InfoRow(
+                  label: 'Monthly Total',
+                  value: '\$${budget.monthlyTotal.toStringAsFixed(2)}'),
+              _InfoRow(
+                  label: 'Start Date',
+                  value: DateFormat('MMM d, y').format(budget.startDate)),
+              _InfoRow(
+                  label: 'Daily Limit',
+                  value:
+                      '\$${budget.adjustedDailyLimit.toStringAsFixed(2)}/day'),
+              _InfoRow(
+                  label: 'Days Remaining', value: '${budget.daysLeft} days'),
+            ]),
+            const SizedBox(height: 20),
+
+            // ── Tools & Features ──────────────────────────────────
+            const _SectionTitle('Tools & Features'),
+            _InfoCard(children: [
+              _ActionRow(
+                icon: Icons.notifications_none_rounded,
+                label: 'Notifications',
+                subtitle: 'Alerts and spending nudges',
+                color: AppTheme.primary,
+                onTap: () => Navigator.pushNamed(context, '/notifications'),
+              ),
+              _ActionRow(
+                icon: Icons.track_changes_rounded,
+                label: 'My Goals',
+                subtitle: 'Track your savings goals',
+                color: AppTheme.primary,
+                onTap: () => Navigator.pushNamed(context, '/goals'),
+              ),
+              _ActionRow(
+                icon: Icons.lock_rounded,
+                label: 'Savings Lock',
+                subtitle: 'Protect money from spending',
+                color: AppTheme.primary,
+                onTap: () => Navigator.pushNamed(context, '/savings-lock'),
+              ),
+              _ActionRow(
+                icon: Icons.bar_chart_rounded,
+                label: 'Insights',
+                subtitle: 'Charts & spending breakdown',
+                color: AppTheme.primary,
+                onTap: () => Navigator.pushNamed(context, '/insights'),
+              ),
+              _ActionRow(
+                icon: Icons.trending_up_rounded,
+                label: 'Budget Forecast',
+                subtitle: 'Projected spend & on-track status',
+                color: AppTheme.primary,
+                onTap: () => Navigator.pushNamed(context, '/forecast'),
+              ),
+              _ActionRow(
+                icon: Icons.calendar_month_rounded,
+                label: 'Monthly Review',
+                subtitle: 'How did you do this month?',
+                color: AppTheme.primary,
+                onTap: () => Navigator.pushNamed(context, '/monthly-review'),
+              ),
+            ]),
+            const SizedBox(height: 20),
+
+            // ── Preferences ───────────────────────────────────────
+            const _SectionTitle('Preferences'),
+            _InfoCard(children: [
+              _ToggleRow(
+                  label: 'Daily Reminders',
+                  value: _dailyReminders,
+                  onChanged: (v) => setState(() => _dailyReminders = v)),
+              _ToggleRow(
+                  label: 'Overspend Alerts',
+                  value: _overspendAlerts,
+                  onChanged: (v) => setState(() => _overspendAlerts = v)),
+              _ToggleRow(
+                  label: 'Weekly Summary',
+                  value: _weeklySummary,
+                  onChanged: (v) => setState(() => _weeklySummary = v)),
+            ]),
+            const SizedBox(height: 20),
+
+            // ── Budget Setup ──────────────────────────────────────
+            const _SectionTitle('Budget Setup'),
+            _InfoCard(children: [
+              _ActionRow(
+                icon: Icons.edit_rounded,
+                label: 'Edit Monthly Budget',
+                color: AppTheme.primary,
+                onTap: () => Navigator.pushNamed(context, '/input-budget'),
+              ),
+              _ActionRow(
+                icon: Icons.calendar_today_rounded,
+                label: 'Change Start Date',
+                color: AppTheme.primary,
+                onTap: () => Navigator.pushNamed(context, '/select-date'),
+              ),
+              _ActionRow(
+                icon: Icons.delete_outline_rounded,
+                label: 'Reset All Data',
+                color: AppTheme.dangerRed,
+                onTap: () => _showResetDialog(context),
+              ),
+            ]),
+            const SizedBox(height: 20),
+
+            // ── App info ──────────────────────────────────────────
+            const _SectionTitle('App'),
+            const _InfoCard(children: [
+              _InfoRow(label: 'Version', value: 'v1.0.0'),
+              _InfoRow(label: 'Built for', value: 'University Students'),
+            ]),
+          ],
+        ),
+      ),
     );
   }
 
@@ -349,8 +313,9 @@ class _ToggleRow extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
+            // FIX: Removed deprecated and duplicate activeThumbColor
+            activeTrackColor: AppTheme.primary.withAlpha(100),
             activeColor: AppTheme.primary,
-            activeThumbColor: Colors.white,
             inactiveThumbColor: AppTheme.textTertiary,
           ),
         ],
