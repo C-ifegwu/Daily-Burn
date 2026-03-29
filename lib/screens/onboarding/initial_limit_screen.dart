@@ -144,7 +144,7 @@ class _InitialLimitScreenState extends State<InitialLimitScreen>
                   const SizedBox(width: 12),
                   Expanded(
                     child: _StatBox(
-                      label: '${daysLeft} Days Left',
+                      label: '$daysLeft Days Left',
                       value: '\$${remaining.toStringAsFixed(2)}',
                     ),
                   ),
@@ -180,12 +180,12 @@ class _InitialLimitScreenState extends State<InitialLimitScreen>
                 child: ElevatedButton(
                   onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
                   style: ElevatedButton.styleFrom(backgroundColor: AppTheme.safeGreen),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Enter Dashboard', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: Colors.white)),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
+                      Text('Enter Dashboard', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: Colors.white)),
+                      SizedBox(width: 8),
+                      Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 20),
                     ],
                   ),
                 ),

@@ -28,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   Container(
                     width: 60, height: 60,
-                    decoration: BoxDecoration(gradient: LinearGradient(colors: [AppTheme.primaryLight, AppTheme.primaryDark], begin: Alignment.topLeft, end: Alignment.bottomRight), shape: BoxShape.circle),
+                    decoration: const BoxDecoration(gradient: LinearGradient(colors: [AppTheme.primaryLight, AppTheme.primaryDark], begin: Alignment.topLeft, end: Alignment.bottomRight), shape: BoxShape.circle),
                     child: Center(child: Text('A', style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w800, color: Colors.white))),
                   ),
                   const SizedBox(width: 16),

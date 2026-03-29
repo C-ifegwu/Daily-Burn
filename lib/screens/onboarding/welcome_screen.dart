@@ -65,7 +65,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     width: 72,
                     height: 72,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [AppTheme.primaryLight, AppTheme.primaryDark],

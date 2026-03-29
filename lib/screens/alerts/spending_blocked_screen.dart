@@ -50,7 +50,7 @@ class SpendingBlockedScreen extends StatelessWidget {
                     Text('You spent', style: AppTheme.bodyMedium),
                     const SizedBox(height: 8),
                     Text('\$${budget.totalSpentThisMonth.toStringAsFixed(2)}',
-                        style: TextStyle(fontSize: 48, fontWeight: FontWeight.w800, color: AppTheme.dangerRed, letterSpacing: -2, height: 1.0)),
+                        style: const TextStyle(fontSize: 48, fontWeight: FontWeight.w800, color: AppTheme.dangerRed, letterSpacing: -2, height: 1.0)),
                     Text('of your \$${budget.monthlyTotal.toStringAsFixed(0)} monthly budget', style: AppTheme.bodyMedium.copyWith(fontSize: 13)),
                   ],
                 ),

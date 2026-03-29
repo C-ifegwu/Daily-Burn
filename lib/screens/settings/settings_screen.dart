@@ -46,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Container(
                     width: 60,
                     height: 60,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: [AppTheme.primaryLight, AppTheme.primaryDark],
                         begin: Alignment.topLeft,
@@ -55,7 +55,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       shape: BoxShape.circle,
                     ),
                     child: Center(
-                      child: Text('A', style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w800, color: Colors.white)),
+                      child: Text('A',
+                          style: GoogleFonts.inter(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white)),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -63,29 +67,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Alex', style: AppTheme.titleMedium.copyWith(fontSize: 18)),
-                        Text('alex@university.edu', style: AppTheme.bodyMedium.copyWith(fontSize: 13)),
+                        Text('Alex',
+                            style: AppTheme.titleMedium.copyWith(fontSize: 18)),
+                        Text('alex@university.edu',
+                            style: AppTheme.bodyMedium.copyWith(fontSize: 13)),
                       ],
                     ),
                   ),
-                  const Icon(Icons.edit_rounded, color: AppTheme.textSecondary, size: 18),
+                  const Icon(Icons.edit_rounded,
+                      color: AppTheme.textSecondary, size: 18),
                 ],
               ),
             ),
             const SizedBox(height: 24),
 
             // ── Budget Summary ────────────────────────────────────
-            _SectionTitle('Budget'),
+            const _SectionTitle('Budget'),
             _InfoCard(children: [
-              _InfoRow(label: 'Monthly Total', value: '\$${budget.monthlyTotal.toStringAsFixed(2)}'),
-              _InfoRow(label: 'Start Date', value: DateFormat('MMM d, y').format(budget.startDate)),
-              _InfoRow(label: 'Daily Limit', value: '\$${budget.adjustedDailyLimit.toStringAsFixed(2)}/day'),
-              _InfoRow(label: 'Days Remaining', value: '${budget.daysLeft} days'),
+              _InfoRow(
+                  label: 'Monthly Total',
+                  value: '\$${budget.monthlyTotal.toStringAsFixed(2)}'),
+              _InfoRow(
+                  label: 'Start Date',
+                  value: DateFormat('MMM d, y').format(budget.startDate)),
+              _InfoRow(
+                  label: 'Daily Limit',
+                  value:
+                      '\$${budget.adjustedDailyLimit.toStringAsFixed(2)}/day'),
+              _InfoRow(
+                  label: 'Days Remaining', value: '${budget.daysLeft} days'),
             ]),
             const SizedBox(height: 20),
 
             // ── Tools & Features ──────────────────────────────────
-            _SectionTitle('Tools & Features'),
+            const _SectionTitle('Tools & Features'),
             _InfoCard(children: [
               _ActionRow(
                 icon: Icons.notifications_none_rounded,
@@ -133,16 +148,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 20),
 
             // ── Preferences ───────────────────────────────────────
-            _SectionTitle('Preferences'),
+            const _SectionTitle('Preferences'),
             _InfoCard(children: [
-              _ToggleRow(label: 'Daily Reminders', value: _dailyReminders, onChanged: (v) => setState(() => _dailyReminders = v)),
-              _ToggleRow(label: 'Overspend Alerts', value: _overspendAlerts, onChanged: (v) => setState(() => _overspendAlerts = v)),
-              _ToggleRow(label: 'Weekly Summary', value: _weeklySummary, onChanged: (v) => setState(() => _weeklySummary = v)),
+              _ToggleRow(
+                  label: 'Daily Reminders',
+                  value: _dailyReminders,
+                  onChanged: (v) => setState(() => _dailyReminders = v)),
+              _ToggleRow(
+                  label: 'Overspend Alerts',
+                  value: _overspendAlerts,
+                  onChanged: (v) => setState(() => _overspendAlerts = v)),
+              _ToggleRow(
+                  label: 'Weekly Summary',
+                  value: _weeklySummary,
+                  onChanged: (v) => setState(() => _weeklySummary = v)),
             ]),
             const SizedBox(height: 20),
 
             // ── Budget Setup ──────────────────────────────────────
-            _SectionTitle('Budget Setup'),
+            const _SectionTitle('Budget Setup'),
             _InfoCard(children: [
               _ActionRow(
                 icon: Icons.edit_rounded,
@@ -166,8 +190,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 20),
 
             // ── App info ──────────────────────────────────────────
-            _SectionTitle('App'),
-            _InfoCard(children: [
+            const _SectionTitle('App'),
+            const _InfoCard(children: [
               _InfoRow(label: 'Version', value: 'v1.0.0'),
               _InfoRow(label: 'Built for', value: 'University Students'),
             ]),
@@ -184,12 +208,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: AppTheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text('Reset Everything?', style: AppTheme.headlineMedium),
-        content: Text('This will clear all your budget data and transactions.', style: AppTheme.bodyMedium),
+        content: Text('This will clear all your budget data and transactions.',
+            style: AppTheme.bodyMedium),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Reset', style: TextStyle(color: AppTheme.dangerRed, fontWeight: FontWeight.w700)),
+            child: const Text('Reset',
+                style: TextStyle(
+                    color: AppTheme.dangerRed, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -207,7 +235,8 @@ class _SectionTitle extends StatelessWidget {
       padding: const EdgeInsets.only(left: 4, bottom: 10),
       child: Text(
         title.toUpperCase(),
-        style: AppTheme.labelSmall.copyWith(letterSpacing: 1.2, fontWeight: FontWeight.w700),
+        style: AppTheme.labelSmall
+            .copyWith(letterSpacing: 1.2, fontWeight: FontWeight.w700),
       ),
     );
   }
@@ -226,13 +255,18 @@ class _InfoCard extends StatelessWidget {
         border: Border.all(color: AppTheme.border),
       ),
       child: Column(
-        children: children.asMap().entries.map((e) => Column(
-          children: [
-            e.value,
-            if (e.key < children.length - 1)
-              const Divider(color: AppTheme.border, height: 0, indent: 16),
-          ],
-        )).toList(),
+        children: children
+            .asMap()
+            .entries
+            .map((e) => Column(
+                  children: [
+                    e.value,
+                    if (e.key < children.length - 1)
+                      const Divider(
+                          color: AppTheme.border, height: 0, indent: 16),
+                  ],
+                ))
+            .toList(),
       ),
     );
   }
@@ -262,7 +296,8 @@ class _ToggleRow extends StatelessWidget {
   final String label;
   final bool value;
   final ValueChanged<bool> onChanged;
-  const _ToggleRow({required this.label, required this.value, required this.onChanged});
+  const _ToggleRow(
+      {required this.label, required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -275,8 +310,9 @@ class _ToggleRow extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
+            // FIX: Removed deprecated and duplicate activeThumbColor
+            activeTrackColor: AppTheme.primary.withAlpha(100),
             activeColor: AppTheme.primary,
-            activeThumbColor: Colors.white,
             inactiveThumbColor: AppTheme.textTertiary,
           ),
         ],
@@ -291,7 +327,12 @@ class _ActionRow extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
   final IconData? icon;
-  const _ActionRow({required this.label, required this.color, required this.onTap, this.subtitle, this.icon});
+  const _ActionRow(
+      {required this.label,
+      required this.color,
+      required this.onTap,
+      this.subtitle,
+      this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -306,7 +347,9 @@ class _ActionRow extends StatelessWidget {
               Container(
                 width: 36,
                 height: 36,
-                decoration: BoxDecoration(color: color.withAlpha(18), borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(
+                    color: color.withAlpha(18),
+                    borderRadius: BorderRadius.circular(10)),
                 child: Icon(icon, color: color, size: 18),
               ),
               const SizedBox(width: 12),
@@ -315,13 +358,17 @@ class _ActionRow extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: AppTheme.bodyMedium.copyWith(color: color, fontWeight: FontWeight.w500)),
+                  Text(label,
+                      style: AppTheme.bodyMedium
+                          .copyWith(color: color, fontWeight: FontWeight.w500)),
                   if (subtitle != null)
-                    Text(subtitle!, style: AppTheme.labelSmall.copyWith(fontSize: 11)),
+                    Text(subtitle!,
+                        style: AppTheme.labelSmall.copyWith(fontSize: 11)),
                 ],
               ),
             ),
-            Icon(Icons.chevron_right_rounded, color: color.withAlpha(160), size: 18),
+            Icon(Icons.chevron_right_rounded,
+                color: color.withAlpha(160), size: 18),
           ],
         ),
       ),
