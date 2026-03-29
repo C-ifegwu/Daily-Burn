@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'firebase_options.dart';
+import 'features/auth/presentation/pages/forgot_password_page.dart';
+import 'features/auth/presentation/pages/login_page.dart';
+import 'features/auth/presentation/pages/signup_page.dart';
 import 'theme/app_theme.dart';
 import 'providers/budget_provider.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding/welcome_screen.dart';
-import 'screens/auth/login_screen.dart';
-import 'screens/auth/signup_screen.dart';
-import 'screens/auth/forgot_password_screen.dart';
 import 'screens/onboarding/input_budget_screen.dart';
 import 'screens/onboarding/select_date_screen.dart';
 import 'screens/onboarding/initial_limit_screen.dart';
@@ -23,8 +25,10 @@ import 'screens/review/monthly_review_screen.dart';
 import 'screens/notifications/notifications_screen.dart';
 import 'screens/forecast/budget_forecast_screen.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await _initializeFirebase();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -33,8 +37,14 @@ void main() {
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const DailyBurnApp());
+}
+
+Future<void> _initializeFirebase() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 class DailyBurnApp extends StatelessWidget {
@@ -52,9 +62,9 @@ class DailyBurnApp extends StatelessWidget {
         routes: {
           '/splash': (_) => const SplashScreen(),
           '/welcome': (_) => const WelcomeScreen(),
-          '/login': (_) => const LoginScreen(),
-          '/signup': (_) => const SignupScreen(),
-          '/forgot-password': (_) => const ForgotPasswordScreen(),
+          '/login': (_) => const LoginPage(),
+          '/signup': (_) => const SignupPage(),
+          '/forgot-password': (_) => const ForgotPasswordPage(),
           '/input-budget': (_) => const InputBudgetScreen(),
           '/select-date': (_) => const SelectDateScreen(),
           '/initial-limit': (_) => const InitialLimitScreen(),

@@ -68,7 +68,7 @@ class BudgetForecastScreen extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         isOnTrack
-                            ? 'At your current rate, your budget will last ${projected} days — covering the ${daysLeft} remaining.'
+                            ? 'At your current rate, your budget will last $projected days — covering the $daysLeft remaining.'
                             : 'At your current rate, your budget will run out in ~$projected days. You have $daysLeft days to go.',
                         style: AppTheme.bodyMedium.copyWith(height: 1.6),
                         textAlign: TextAlign.center,
@@ -115,7 +115,7 @@ class BudgetForecastScreen extends StatelessWidget {
                       gridData: FlGridData(
                         show: true,
                         drawVerticalLine: false,
-                        getDrawingHorizontalLine: (_) => FlLine(color: AppTheme.border, strokeWidth: 1),
+                        getDrawingHorizontalLine: (_) => const FlLine(color: AppTheme.border, strokeWidth: 1),
                       ),
                       borderData: FlBorderData(show: false),
                       titlesData: FlTitlesData(

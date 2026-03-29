@@ -1,5 +1,7 @@
 // Profile screen — refactored for new light theme + monthly budget model.
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -28,37 +30,76 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   Container(
                     width: 60, height: 60,
-                    decoration: BoxDecoration(gradient: LinearGradient(colors: [AppTheme.primaryLight, AppTheme.primaryDark], begin: Alignment.topLeft, end: Alignment.bottomRight), shape: BoxShape.circle),
+                    decoration: const BoxDecoration(gradient: LinearGradient(colors: [AppTheme.primaryLight, AppTheme.primaryDark], begin: Alignment.topLeft, end: Alignment.bottomRight), shape: BoxShape.circle),
                     child: Center(child: Text('A', style: GoogleFonts.inter(fontSize: 24, fontWeight: FontWeight.w800, color: Colors.white))),
                   ),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Alex', style: AppTheme.titleMedium.copyWith(fontSize: 18)),
-                      Text('Monthly Budget: \$${budget.monthlyTotal.toStringAsFixed(0)}', style: AppTheme.bodyMedium.copyWith(fontSize: 13)),
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                colors: [
+                                  AppTheme.primaryLight,
+                                  AppTheme.primaryDark
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight),
+                            shape: BoxShape.circle),
+                        child: Center(
+                            child: Text(avatarLetter,
+                                style: GoogleFonts.inter(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white))),
+                      ),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            displayName.isNotEmpty
+                                ? displayName
+                                : 'Signed in user',
+                            style: AppTheme.titleMedium.copyWith(fontSize: 18),
+                          ),
+                          Text(
+                            email.isNotEmpty ? email : 'No email linked',
+                            style: AppTheme.bodyMedium.copyWith(fontSize: 13),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 24),
+                _Row('Monthly Budget',
+                    '\$${budget.monthlyTotal.toStringAsFixed(0)}'),
+                _Row('Start Date',
+                    DateFormat('MMM d, y').format(budget.startDate)),
+                _Row('Daily Limit',
+                    '\$${budget.adjustedDailyLimit.toStringAsFixed(2)}/day'),
+                _Row('Days Left', '${budget.daysLeft} days'),
+                _Row('Monthly Remaining',
+                    '\$${budget.monthlyRemaining.toStringAsFixed(2)}'),
+                const SizedBox(height: 28),
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/input-budget'),
+                    child: const Text('Edit Budget'),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 24),
-            _Row('Start Date', DateFormat('MMM d, y').format(budget.startDate)),
-            _Row('Daily Limit', '\$${budget.adjustedDailyLimit.toStringAsFixed(2)}/day'),
-            _Row('Days Left', '${budget.daysLeft} days'),
-            _Row('Monthly Remaining', '\$${budget.monthlyRemaining.toStringAsFixed(2)}'),
-            const SizedBox(height: 28),
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, '/input-budget'),
-                child: const Text('Edit Budget'),
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -73,7 +114,10 @@ class _Row extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(color: AppTheme.surface, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppTheme.border)),
+      decoration: BoxDecoration(
+          color: AppTheme.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppTheme.border)),
       child: Row(
         children: [
           Text(label, style: AppTheme.bodyMedium),
