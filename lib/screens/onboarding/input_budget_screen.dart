@@ -28,7 +28,8 @@ class _InputBudgetScreenState extends State<InputBudgetScreen> {
 
   void _backspace() {
     setState(() {
-      _amount = _amount.length > 1 ? _amount.substring(0, _amount.length - 1) : '0';
+      _amount =
+          _amount.length > 1 ? _amount.substring(0, _amount.length - 1) : '0';
     });
   }
 
@@ -58,119 +59,134 @@ class _InputBudgetScreenState extends State<InputBudgetScreen> {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 28),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Set Monthly Budget', style: AppTheme.headlineMedium),
-                  const SizedBox(height: 6),
-                  Text(
-                    'How much is in the bank for the month? You\'ll use your daily limit to track your daily finances.',
-                    style: AppTheme.bodyMedium.copyWith(height: 1.5),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 36),
-            // Amount label
-            Text('MONTHLY TOTAL', style: AppTheme.labelSmall.copyWith(letterSpacing: 1.2)),
-            const SizedBox(height: 10),
-            // Amount display
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 520),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(height: 28),
                 Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: Text(
-                    '\$',
-                    style: GoogleFonts.inter(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w500,
-                      color: AppTheme.textSecondary,
-                    ),
+                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Set Monthly Budget',
+                          style: AppTheme.headlineMedium),
+                      const SizedBox(height: 6),
+                      Text(
+                        'How much is in the bank for the month? You\'ll use your daily limit to track your daily finances.',
+                        style: AppTheme.bodyMedium.copyWith(height: 1.5),
+                      ),
+                    ],
                   ),
                 ),
-                Text(
-                  _amount,
-                  style: GoogleFonts.inter(
-                    fontSize: 64,
-                    fontWeight: FontWeight.w800,
-                    color: AppTheme.textPrimary,
-                    letterSpacing: -3,
-                    height: 1.0,
+                const SizedBox(height: 36),
+                // Amount label
+                Text('MONTHLY TOTAL',
+                    style: AppTheme.labelSmall.copyWith(letterSpacing: 1.2)),
+                const SizedBox(height: 10),
+                // Amount display
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Text(
+                        '\$',
+                        style: GoogleFonts.inter(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w500,
+                          color: AppTheme.textSecondary,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      _amount,
+                      style: GoogleFonts.inter(
+                        fontSize: 64,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.textPrimary,
+                        letterSpacing: -3,
+                        height: 1.0,
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Hint
+                if (_value > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: AppTheme.safeGreen.withAlpha(25),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'Daily limit ≈ \$${(_value / 30).toStringAsFixed(2)}/day',
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          color: AppTheme.safeGreen,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                const SizedBox(height: 24),
+
+                // Numpad
+                Expanded(child: _buildNumpad()),
+
+                // CTA
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(28, 0, 28, 24),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: _value > 0
+                          ? () {
+                              context
+                                  .read<BudgetProvider>()
+                                  .setMonthlyTotal(_value);
+                              Navigator.pushNamed(context, '/select-date');
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            _value > 0 ? AppTheme.primary : AppTheme.border,
+                        foregroundColor:
+                            _value > 0 ? Colors.white : AppTheme.textTertiary,
+                      ),
+                      child: const Text('Next →'),
+                    ),
                   ),
                 ),
               ],
             ),
-
-            // Hint
-            if (_value > 0)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: AppTheme.safeGreen.withAlpha(25),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    'Daily limit ≈ \$${(_value / 30).toStringAsFixed(2)}/day',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      color: AppTheme.safeGreen,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-
-            const SizedBox(height: 24),
-
-            // Numpad
-            Expanded(child: _buildNumpad()),
-
-            // CTA
-            Padding(
-              padding: const EdgeInsets.fromLTRB(28, 0, 28, 24),
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: _value > 0
-                      ? () {
-                          context.read<BudgetProvider>().setMonthlyTotal(_value);
-                          Navigator.pushNamed(context, '/select-date');
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _value > 0 ? AppTheme.primary : AppTheme.border,
-                    foregroundColor: _value > 0 ? Colors.white : AppTheme.textTertiary,
-                  ),
-                  child: const Text('Next →'),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildNumpad() {
-    final keys = ['1','2','3','4','5','6','7','8','9','.','0','⌫'];
-    return GridView.count(
-      crossAxisCount: 3,
-      shrinkWrap: true,
+    final keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', '⌫'];
+    return GridView.builder(
+      itemCount: keys.length,
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      childAspectRatio: 2.0,
-      children: keys.map((k) {
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisExtent: 74,
+      ),
+      itemBuilder: (_, index) {
+        final k = keys[index];
         return GestureDetector(
           onTap: () => k == '⌫' ? _backspace() : _append(k),
           child: Container(
@@ -181,7 +197,8 @@ class _InputBudgetScreenState extends State<InputBudgetScreen> {
             ),
             child: Center(
               child: k == '⌫'
-                  ? const Icon(Icons.backspace_outlined, color: AppTheme.textSecondary, size: 22)
+                  ? const Icon(Icons.backspace_outlined,
+                      color: AppTheme.textSecondary, size: 22)
                   : Text(
                       k,
                       style: GoogleFonts.inter(
@@ -193,7 +210,7 @@ class _InputBudgetScreenState extends State<InputBudgetScreen> {
             ),
           ),
         );
-      }).toList(),
+      },
     );
   }
 }

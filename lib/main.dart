@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'firebase_options.dart';
 import 'features/auth/presentation/pages/forgot_password_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/signup_page.dart';
@@ -23,8 +25,9 @@ import 'screens/review/monthly_review_screen.dart';
 import 'screens/notifications/notifications_screen.dart';
 import 'screens/forecast/budget_forecast_screen.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await _initializeFirebase();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -35,6 +38,12 @@ void main() {
   );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const DailyBurnApp());
+}
+
+Future<void> _initializeFirebase() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 class DailyBurnApp extends StatelessWidget {
