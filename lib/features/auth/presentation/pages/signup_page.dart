@@ -20,23 +20,28 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _nameCtrl = TextEditingController();
   final TextEditingController _emailCtrl = TextEditingController();
   final TextEditingController _passCtrl = TextEditingController();
-  late final AuthBloc _authBloc;
-  late final StreamSubscription<AuthState> _authSubscription;
+  AuthBloc? _authBloc;
+  StreamSubscription<AuthState>? _authSubscription;
 
   bool _obscurePassword = true;
   bool _isLoading = false;
+  String? _initError;
 
   @override
   void initState() {
     super.initState();
-    _authBloc = createAuthBloc();
-    _authSubscription = _authBloc.stream.listen(_onAuthStateChanged);
+    try {
+      _authBloc = createAuthBloc();
+      _authSubscription = _authBloc!.stream.listen(_onAuthStateChanged);
+    } catch (error) {
+      _initError = _toSetupError(error);
+    }
   }
 
   @override
   void dispose() {
-    _authSubscription.cancel();
-    _authBloc.close();
+    _authSubscription?.cancel();
+    _authBloc?.close();
     _nameCtrl.dispose();
     _emailCtrl.dispose();
     _passCtrl.dispose();
@@ -66,6 +71,11 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void _handleSignup() {
+    if (_authBloc == null) {
+      _showSetupError();
+      return;
+    }
+
     final String name = _nameCtrl.text.trim();
     final String email = _emailCtrl.text.trim();
     final String password = _passCtrl.text;
@@ -77,7 +87,7 @@ class _SignupPageState extends State<SignupPage> {
       return;
     }
 
-    _authBloc.add(
+    _authBloc!.add(
       SignupRequested(
         email: email,
         password: password,
@@ -87,7 +97,26 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void _handleGoogleSignup() {
-    _authBloc.add(const GoogleSigninRequested());
+    if (_authBloc == null) {
+      _showSetupError();
+      return;
+    }
+    _authBloc!.add(const GoogleSigninRequested());
+  }
+
+  void _showSetupError() {
+    final String message = _initError ??
+        'Authentication is not available right now. Check Firebase setup and try again.';
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  String _toSetupError(Object error) {
+    final String message = error.toString();
+    if (message.contains('[core/no-app]')) {
+      return 'Firebase is not configured for this app yet. Run FlutterFire setup and restart.';
+    }
+    return message.replaceFirst('Exception: ', '');
   }
 
   Widget _buildTextField({
@@ -180,6 +209,25 @@ class _SignupPageState extends State<SignupPage> {
                 'Join Daily Burn and master your budget.',
                 style: AppTheme.bodyMedium,
               ),
+              if (_initError != null) ...[
+                const SizedBox(height: 14),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF4E5),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFF6C26B)),
+                  ),
+                  child: Text(
+                    _initError!,
+                    style: AppTheme.bodyMedium.copyWith(
+                      color: const Color(0xFF7A5200),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 40),
               _buildTextField(
                 label: 'Full Name',
